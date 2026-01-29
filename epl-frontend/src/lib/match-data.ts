@@ -1,0 +1,200 @@
+import { Match, Team, Player } from "@/types";
+
+// Mock Stats Data
+export const topScorers = [
+    { name: "Erling Haaland", goals: 16, team: "Manchester City", photo: "/players/haaland.png" },
+    { name: "Mohamed Salah", goals: 14, team: "Liverpool", photo: "/players/salah.png" },
+    { name: "Ollie Watkins", goals: 12, team: "Aston Villa", photo: "/players/watkins.png" },
+];
+
+export const topAssistants = [
+    { name: "Cole Palmer", assists: 11, team: "Chelsea" },
+    { name: "Bukayo Saka", assists: 10, team: "Arsenal" },
+    { name: "Kevin De Bruyne", assists: 9, team: "Manchester City" },
+];
+
+export const latestResults: (Match & { homeTeam: Team; awayTeam: Team })[] = [
+    {
+        id: "r1",
+        homeTeamId: "t1",
+        awayTeamId: "t2",
+        homeScore: 4,
+        awayScore: 1,
+        date: "2025-12-30T19:30:00Z",
+        status: "FINISHED",
+        seasonId: "s1",
+        homeTeam: { id: "t1", name: "Arsenal", city: "London", stadium: "Emirates Stadium", shortName: "ARS" },
+        awayTeam: { id: "t2", name: "Aston Villa", city: "Birmingham", stadium: "Villa Park", shortName: "AVL" },
+    },
+    {
+        id: "r2",
+        homeTeamId: "t3",
+        awayTeamId: "t4",
+        homeScore: 1,
+        awayScore: 1,
+        date: "2025-12-30T19:30:00Z",
+        status: "FINISHED",
+        seasonId: "s1",
+        homeTeam: { id: "t3", name: "Manchester United", city: "Manchester", stadium: "Old Trafford", shortName: "MUN" },
+        awayTeam: { id: "t4", name: "Wolverhampton", city: "Wolverhampton", stadium: "Molineux", shortName: "WOL" },
+    },
+    {
+        id: "r3",
+        homeTeamId: "t5",
+        awayTeamId: "t6",
+        homeScore: 1,
+        awayScore: 3,
+        date: "2025-12-30T19:30:00Z",
+        status: "FINISHED",
+        seasonId: "s1",
+        homeTeam: { id: "t5", name: "Burnley", city: "Burnley", stadium: "Turf Moor", shortName: "BUR" },
+        awayTeam: { id: "t6", name: "Newcastle", city: "Newcastle", stadium: "St James' Park", shortName: "NEW" },
+    },
+    {
+        id: "r4",
+        homeTeamId: "t7",
+        awayTeamId: "t8",
+        homeScore: 2,
+        awayScore: 2,
+        date: "2025-12-30T19:30:00Z",
+        status: "FINISHED",
+        seasonId: "s1",
+        homeTeam: { id: "t7", name: "Chelsea", city: "London", stadium: "Stamford Bridge", shortName: "CHE" },
+        awayTeam: { id: "t8", name: "Bournemouth", city: "Bournemouth", stadium: "Vitality Stadium", shortName: "BOU" },
+    },
+];
+
+export const upcomingFixtures: (Match & { homeTeam: Team; awayTeam: Team })[] = [
+    {
+        id: "f1",
+        homeTeamId: "t9",
+        awayTeamId: "t10",
+        homeScore: 0,
+        awayScore: 0,
+        date: "2026-01-01T17:30:00Z",
+        status: "SCHEDULED",
+        seasonId: "s1",
+        homeTeam: { id: "t9", name: "Crystal Palace", city: "London", stadium: "Selhurst Park", shortName: "CRY" },
+        awayTeam: { id: "t10", name: "Fulham", city: "London", stadium: "Craven Cottage", shortName: "FUL" },
+    },
+    {
+        id: "f2",
+        homeTeamId: "t11",
+        awayTeamId: "t12",
+        homeScore: 0,
+        awayScore: 0,
+        date: "2026-01-01T17:30:00Z",
+        status: "SCHEDULED",
+        seasonId: "s1",
+        homeTeam: { id: "t11", name: "Liverpool", city: "Liverpool", stadium: "Anfield", shortName: "LIV" },
+        awayTeam: { id: "t12", name: "Leeds", city: "Leeds", stadium: "Elland Road", shortName: "LEE" },
+    },
+    {
+        id: "f3",
+        homeTeamId: "t13",
+        awayTeamId: "t14",
+        homeScore: 0,
+        awayScore: 0,
+        date: "2026-01-01T20:00:00Z",
+        status: "SCHEDULED",
+        seasonId: "s1",
+        homeTeam: { id: "t13", name: "Sunderland", city: "Sunderland", stadium: "Stadium of Light", shortName: "SUN" },
+        awayTeam: { id: "t14", name: "Manchester City", city: "Manchester", stadium: "Etihad Stadium", shortName: "MCI" },
+    },
+];
+export const allTeams = [
+    { id: "1", name: "Arsenal", city: "London", stadium: "Emirates Stadium", shortName: "ARS" },
+    { id: "2", name: "Aston Villa", city: "Birmingham", stadium: "Villa Park", shortName: "AVL" },
+    { id: "3", name: "AFC Bournemouth", city: "Bournemouth", stadium: "Vitality Stadium", shortName: "BOU" },
+    { id: "4", name: "Brentford", city: "London", stadium: "Gtech Community Stadium", shortName: "BRE" },
+    { id: "5", name: "Brighton & Hove Albion", city: "Brighton", stadium: "Amex Stadium", shortName: "BHA" },
+    { id: "6", name: "Burnley", city: "Burnley", stadium: "Turf Moor", shortName: "BUR" },
+    { id: "7", name: "Chelsea", city: "London", stadium: "Stamford Bridge", shortName: "CHE" },
+    { id: "8", name: "Crystal Palace", city: "London", stadium: "Selhurst Park", shortName: "CRY" },
+    { id: "9", name: "Everton", city: "Liverpool", stadium: "Goodison Park", shortName: "EVE" },
+    { id: "10", name: "Fulham", city: "London", stadium: "Craven Cottage", shortName: "FUL" },
+    { id: "11", name: "Leeds United", city: "Leeds", stadium: "Elland Road", shortName: "LEE" },
+    { id: "12", name: "Liverpool", city: "Liverpool", stadium: "Anfield", shortName: "LIV" },
+    { id: "13", name: "Manchester City", city: "Manchester", stadium: "Etihad Stadium", shortName: "MCI" },
+    { id: "14", name: "Manchester United", city: "Manchester", stadium: "Old Trafford", shortName: "MUN" },
+    { id: "15", name: "Newcastle United", city: "Newcastle", stadium: "St James' Park", shortName: "NEW" },
+    { id: "16", name: "Nottingham Forest", city: "Nottingham", stadium: "City Ground", shortName: "NFO" },
+    { id: "17", name: "Sunderland", city: "Sunderland", stadium: "Stadium of Light", shortName: "SUN" },
+    { id: "18", name: "Tottenham Hotspur", city: "London", stadium: "Tottenham Hotspur Stadium", shortName: "TOT" },
+    { id: "19", name: "West Ham United", city: "London", stadium: "London Stadium", shortName: "WHU" },
+    { id: "20", name: "Wolverhampton Wanderers", city: "Wolverhampton", stadium: "Molineux", shortName: "WOL" },
+];
+
+export const playerStats = {
+    goals: [
+        { rank: 1, name: "Erling Haaland", team: "Manchester City", value: 20 },
+        { rank: 2, name: "Igor Thiago", team: "Brentford", value: 16 },
+        { rank: 3, name: "Antoine Semenyo", team: "Manchester City", value: 11 },
+        { rank: 4, name: "Dominic Calvert-Lewin", team: "Leeds United", value: 9 },
+        { rank: 5, name: "Hugo Ekitiké", team: "Liverpool", value: 8 },
+        { rank: 5, name: "Danny Welbeck", team: "Brighton", value: 8 },
+        { rank: 5, name: "João Pedro", team: "Chelsea", value: 8 },
+        { rank: 5, name: "Bryan Mbeumo", team: "Manchester United", value: 8 },
+    ],
+    assists: [
+        { rank: 1, name: "Bruno Fernandes", team: "Manchester United", value: 10 },
+        { rank: 2, name: "Rayan Cherki", team: "Manchester City", value: 7 },
+        { rank: 3, name: "Jack Grealish", team: "Everton", value: 6 },
+        { rank: 4, name: "Granit Xhaka", team: "Sunderland", value: 5 },
+        { rank: 4, name: "Mohammed Kudus", team: "Tottenham", value: 5 },
+        { rank: 4, name: "Morgan Rogers", team: "Aston Villa", value: 5 },
+        { rank: 7, name: "Yankuba Minteh", team: "Brighton", value: 4 },
+        { rank: 7, name: "Quilindschy Hartman", team: "Burnley", value: 4 },
+    ],
+    passes: [
+        { rank: 1, name: "Virgil van Dijk", team: "Liverpool", value: 1852 },
+        { rank: 2, name: "Lewis Dunk", team: "Brighton", value: 1743 },
+        { rank: 3, name: "Joachim Andersen", team: "Fulham", value: 1623 },
+        { rank: 4, name: "Jan Paul van Hecke", team: "Brighton", value: 1606 },
+        { rank: 5, name: "Elliot Anderson", team: "Nottingham Forest", value: 1529 },
+        { rank: 6, name: "Trevoh Chalobah", team: "Chelsea", value: 1479 },
+        { rank: 7, name: "Rúben Dias", team: "Manchester City", value: 1399 },
+        { rank: 8, name: "Ibrahima Konaté", team: "Liverpool", value: 1372 },
+    ],
+    cleanSheets: [
+        { rank: 1, name: "David Raya", team: "Arsenal", value: 11 },
+        { rank: 2, name: "Robert Sánchez", team: "Chelsea", value: 9 },
+        { rank: 2, name: "Gianluigi Donnarumma", team: "Manchester City", value: 9 },
+        { rank: 2, name: "Jordan Pickford", team: "Everton", value: 9 },
+        { rank: 5, name: "Dean Henderson", team: "Crystal Palace", value: 8 },
+        { rank: 6, name: "Nick Pope", team: "Newcastle United", value: 7 },
+        { rank: 6, name: "Robin Roefs", team: "Sunderland", value: 7 },
+        { rank: 6, name: "Guglielmo Vicario", team: "Tottenham", value: 7 },
+    ]
+};
+
+export const clubStats = {
+    goals: [
+        { rank: 1, team: "Manchester City", value: 47 },
+        { rank: 2, team: "Arsenal", value: 42 },
+        { rank: 3, team: "Manchester United", value: 41 },
+        { rank: 4, team: "Chelsea", value: 39 },
+        { rank: 5, team: "AFC Bournemouth", value: 38 },
+    ],
+    tackles: [
+        { rank: 1, team: "Tottenham Hotspur", value: 287 },
+        { rank: 2, team: "Crystal Palace", value: 267 },
+        { rank: 3, team: "Brighton & Hove Albion", value: 260 },
+        { rank: 4, team: "Leeds United", value: 254 },
+        { rank: 5, team: "Manchester United", value: 253 },
+    ],
+    blocks: [
+        { rank: 1, team: "Burnley", value: 106 },
+        { rank: 2, team: "Everton", value: 104 },
+        { rank: 3, team: "Brentford", value: 99 },
+        { rank: 4, team: "Nottingham Forest", value: 99 },
+        { rank: 5, team: "Aston Villa", value: 98 },
+    ],
+    passes: [
+        { rank: 1, team: "Manchester City", value: 13279 },
+        { rank: 2, team: "Liverpool", value: 12889 },
+        { rank: 3, team: "Chelsea", value: 11861 },
+        { rank: 4, team: "Arsenal", value: 11275 },
+        { rank: 5, team: "Fulham", value: 10906 },
+    ]
+};
