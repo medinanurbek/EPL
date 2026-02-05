@@ -22,5 +22,6 @@ export const getTeamLogo = (teamName: string) => {
     if (name.includes('sunderland')) return '/logos/sunderland.football-logos.cc.svg';
     if (name.includes('west ham')) return '/logos/west-ham.football-logos.cc.svg';
     if (name.includes('wolves') || name.includes('wolverhampton')) return '/logos/wolves.football-logos.cc.svg';
+
     return '/logo-fallback.svg';
 };
