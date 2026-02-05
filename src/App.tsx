@@ -1,0 +1,54 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+
+// Pages
+import Home from '@/pages/Home';
+import Profile from '@/pages/Profile';
+import Auth from '@/pages/Auth';
+import Standings from '@/pages/Standings';
+import Matches from '@/pages/Matches';
+import Stats from '@/pages/Stats';
+import Teams from '@/pages/Teams';
+import TeamDetails from '@/pages/TeamDetails';
+import PlayerDetails from '@/pages/PlayerDetails';
+
+// Admin Pages
+import AdminDashboard from '@/pages/admin/Dashboard';
+import ManageTeams from '@/pages/admin/Teams';
+import ManageMatches from '@/pages/admin/Matches';
+import ManagePlayers from '@/pages/admin/Players';
+
+function App() {
+    return (
+        <BrowserRouter>
+            <div className="flex flex-col min-h-screen bg-[#37003c] text-white">
+                <Navbar />
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/auth" element={<Auth />} />
+                        <Route path="/standings" element={<Standings />} />
+                        <Route path="/matches" element={<Matches />} />
+                        <Route path="/stats" element={<Stats />} />
+
+                        <Route path="/teams" element={<Teams />} />
+                        <Route path="/teams/:teamId" element={<TeamDetails />} />
+
+                        <Route path="/players/:playerId" element={<PlayerDetails />} />
+
+                        {/* Admin Routes */}
+                        <Route path="/admin" element={<AdminDashboard />} />
+                        <Route path="/admin/teams" element={<ManageTeams />} />
+                        <Route path="/admin/matches" element={<ManageMatches />} />
+                        <Route path="/admin/players" element={<ManagePlayers />} />
+                    </Routes>
+                </main>
+                <Footer />
+            </div>
+        </BrowserRouter>
+    );
+}
+
+export default App;

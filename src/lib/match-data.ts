@@ -1,4 +1,4 @@
-import { Match, Team, Player } from "@/types";
+import { Match, Team } from "@/types";
 
 // Mock Stats Data
 export const topScorers = [
