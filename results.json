@@ -1,0 +1,2402 @@
+[
+  {
+    "matchday": 1,
+    "date": "Fri Aug/15 2025",
+    "time": "20.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 4,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 1,
+    "date": "Sat Aug/16",
+    "time": "12.30",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 1,
+    "date": "Sat Aug/16",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 1,
+    "date": "Sat Aug/16",
+    "time": "15.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 1,
+    "date": "Sat Aug/16",
+    "time": "15.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 1,
+    "date": "Sat Aug/16",
+    "time": "17.30",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 0,
+    "awayScore": 4,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 1,
+    "date": "Sun Aug/17",
+    "time": "14.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "3-0"
+  },
+  {
+    "matchday": 1,
+    "date": "Sun Aug/17",
+    "time": "14.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 1,
+    "date": "Sun Aug/17",
+    "time": "16.30",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 1,
+    "date": "Mon Aug/18",
+    "time": "20.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Fri Aug/22",
+    "time": "20.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 1,
+    "awayScore": 5,
+    "halfTimeScore": "1-3"
+  },
+  {
+    "matchday": 2,
+    "date": "Sat Aug/23",
+    "time": "12.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 2,
+    "date": "Sat Aug/23",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sat Aug/23",
+    "time": "15.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sat Aug/23",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sat Aug/23",
+    "time": "17.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 5,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sun Aug/24",
+    "time": "14.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sun Aug/24",
+    "time": "14.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Sun Aug/24",
+    "time": "16.30",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 2,
+    "date": "Mon Aug/25",
+    "time": "20.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "12.30",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "15.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "15.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "15.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "1-2"
+  },
+  {
+    "matchday": 3,
+    "date": "Sat Aug/30",
+    "time": "17.30",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 3,
+    "date": "Sun Aug/31",
+    "time": "14.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 3,
+    "date": "Sun Aug/31",
+    "time": "14.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 3,
+    "date": "Sun Aug/31",
+    "time": "16.30",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 3,
+    "date": "Sun Aug/31",
+    "time": "19.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "12.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "15.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "15.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "15.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "15.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "17.30",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sat Sep/13",
+    "time": "20.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sun Sep/14",
+    "time": "14.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 4,
+    "date": "Sun Sep/14",
+    "time": "16.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "12.30",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "15.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 1,
+    "awayScore": 3,
+    "halfTimeScore": "1-3"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "17.30",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 5,
+    "date": "Sat Sep/20",
+    "time": "20.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 5,
+    "date": "Sun Sep/21",
+    "time": "14.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 5,
+    "date": "Sun Sep/21",
+    "time": "14.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 5,
+    "date": "Sun Sep/21",
+    "time": "16.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "12.30",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "15.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "15.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 1,
+    "awayScore": 3,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "15.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 5,
+    "awayScore": 1,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "17.30",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sat Sep/27",
+    "time": "20.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 6,
+    "date": "Sun Sep/28",
+    "time": "14.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 6,
+    "date": "Sun Sep/28",
+    "time": "16.30",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 6,
+    "date": "Mon Sep/29",
+    "time": "20.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Fri Oct/3",
+    "time": "20.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Fulham FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sat Oct/4",
+    "time": "12.30",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 7,
+    "date": "Sat Oct/4",
+    "time": "15.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sat Oct/4",
+    "time": "15.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sat Oct/4",
+    "time": "17.30",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sun Oct/5",
+    "time": "14.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sun Oct/5",
+    "time": "14.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 7,
+    "date": "Sun Oct/5",
+    "time": "14.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sun Oct/5",
+    "time": "14.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 7,
+    "date": "Sun Oct/5",
+    "time": "16.30",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "12.30",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "15.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 3,
+    "awayScore": 3,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "15.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sat Oct/18",
+    "time": "17.30",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 8,
+    "date": "Sun Oct/19",
+    "time": "14.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 8,
+    "date": "Sun Oct/19",
+    "time": "16.30",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 8,
+    "date": "Mon Oct/20",
+    "time": "20.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 9,
+    "date": "Fri Oct/24",
+    "time": "20.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sat Oct/25",
+    "time": "15.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 9,
+    "date": "Sat Oct/25",
+    "time": "15.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sat Oct/25",
+    "time": "17.30",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 4,
+    "awayScore": 2,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sat Oct/25",
+    "time": "20.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 9,
+    "date": "Sun Oct/26",
+    "time": "14.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sun Oct/26",
+    "time": "14.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sun Oct/26",
+    "time": "14.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 9,
+    "date": "Sun Oct/26",
+    "time": "14.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "2-2"
+  },
+  {
+    "matchday": 9,
+    "date": "Sun Oct/26",
+    "time": "16.30",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "15.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "15.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "15.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "17.30",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 10,
+    "date": "Sat Nov/1",
+    "time": "20.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 10,
+    "date": "Sun Nov/2",
+    "time": "14.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 10,
+    "date": "Sun Nov/2",
+    "time": "16.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 10,
+    "date": "Mon Nov/3",
+    "time": "20.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Everton FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 11,
+    "date": "Sat Nov/8",
+    "time": "12.30",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 11,
+    "date": "Sat Nov/8",
+    "time": "15.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 11,
+    "date": "Sat Nov/8",
+    "time": "15.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 11,
+    "date": "Sat Nov/8",
+    "time": "17.30",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 11,
+    "date": "Sat Nov/8",
+    "time": "20.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 11,
+    "date": "Sun Nov/9",
+    "time": "14.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 4,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 11,
+    "date": "Sun Nov/9",
+    "time": "14.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 11,
+    "date": "Sun Nov/9",
+    "time": "14.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 11,
+    "date": "Sun Nov/9",
+    "time": "14.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 11,
+    "date": "Sun Nov/9",
+    "time": "16.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "12.30",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "15.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "15.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sat Nov/22",
+    "time": "17.30",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sun Nov/23",
+    "time": "14.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Sun Nov/23",
+    "time": "16.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 4,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 12,
+    "date": "Mon Nov/24",
+    "time": "20.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 13,
+    "date": "Sat Nov/29",
+    "time": "15.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 13,
+    "date": "Sat Nov/29",
+    "time": "15.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 13,
+    "date": "Sat Nov/29",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 13,
+    "date": "Sat Nov/29",
+    "time": "17.30",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 13,
+    "date": "Sat Nov/29",
+    "time": "20.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 13,
+    "date": "Sun Nov/30",
+    "time": "12.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 13,
+    "date": "Sun Nov/30",
+    "time": "14.05",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 13,
+    "date": "Sun Nov/30",
+    "time": "14.05",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 13,
+    "date": "Sun Nov/30",
+    "time": "14.05",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 13,
+    "date": "Sun Nov/30",
+    "time": "16.30",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Tue Dec/2",
+    "time": "19.30",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Everton FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Tue Dec/2",
+    "time": "19.30",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 4,
+    "awayScore": 5,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 14,
+    "date": "Tue Dec/2",
+    "time": "20.15",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "19.30",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 3,
+    "awayScore": 4,
+    "halfTimeScore": "1-2"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "19.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "19.30",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "19.30",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "20.15",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Wed Dec/3",
+    "time": "20.15",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 14,
+    "date": "Thu Dec/4",
+    "time": "20.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "12.30",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "15.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "15.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "15.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sat Dec/6",
+    "time": "17.30",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 3,
+    "awayScore": 3,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 15,
+    "date": "Sun Dec/7",
+    "time": "14.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 15,
+    "date": "Sun Dec/7",
+    "time": "16.30",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 15,
+    "date": "Mon Dec/8",
+    "time": "20.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 1,
+    "awayScore": 4,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 16,
+    "date": "Sat Dec/13",
+    "time": "15.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Sat Dec/13",
+    "time": "15.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Sat Dec/13",
+    "time": "17.30",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 16,
+    "date": "Sat Dec/13",
+    "time": "20.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Sun Dec/14",
+    "time": "14.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Sun Dec/14",
+    "time": "14.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 0,
+    "awayScore": 3,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 16,
+    "date": "Sun Dec/14",
+    "time": "14.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Sun Dec/14",
+    "time": "14.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 16,
+    "date": "Sun Dec/14",
+    "time": "16.30",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 16,
+    "date": "Mon Dec/15",
+    "time": "20.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 4,
+    "awayScore": 4,
+    "halfTimeScore": "2-2"
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "12.30",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Burnley FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sat Dec/20",
+    "time": "17.30",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sun Dec/21",
+    "time": "14.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 17,
+    "date": "Sun Dec/21",
+    "time": "14.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 4,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 17,
+    "date": "Sun Dec/21",
+    "time": "16.30",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 17,
+    "date": "Mon Dec/22",
+    "time": "20.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Fri Dec/26",
+    "time": "20.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "12.30",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "15.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "15.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 4,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": null
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "15.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "15.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sat Dec/27",
+    "time": "17.30",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 18,
+    "date": "Sun Dec/28",
+    "time": "14.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 18,
+    "date": "Sun Dec/28",
+    "time": "16.30",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "19.30",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 1,
+    "awayScore": 3,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "19.30",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "19.30",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "19.30",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "20.15",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 4,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Tue Dec/30",
+    "time": "20.15",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Thu Jan/1",
+    "time": "17.30",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Thu Jan/1",
+    "time": "17.30",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Thu Jan/1",
+    "time": "20.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 19,
+    "date": "Thu Jan/1",
+    "time": "20.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sat Jan/3",
+    "time": "12.30",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sat Jan/3",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sat Jan/3",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sat Jan/3",
+    "time": "17.30",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "12.30",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "15.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 4,
+    "halfTimeScore": "1-2"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "15.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "15.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "15.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 20,
+    "date": "Sun Jan/4",
+    "time": "17.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 21,
+    "date": "Tue Jan/6",
+    "time": "20.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "2-1"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "19.30",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "20.15",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 21,
+    "date": "Wed Jan/7",
+    "time": "20.15",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 4,
+    "awayScore": 3,
+    "halfTimeScore": "2-2"
+  },
+  {
+    "matchday": 21,
+    "date": "Thu Jan/8",
+    "time": "20.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "Brentford FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Leeds United FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 1,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 22,
+    "date": "Sat Jan/17",
+    "time": "15.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Arsenal FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sun Jan/18",
+    "time": "15.00",
+    "homeTeam": "Wolverhampton Wanderers FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 0,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Sun Jan/18",
+    "time": "15.00",
+    "homeTeam": "Aston Villa FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 0,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 22,
+    "date": "Mon Jan/19",
+    "time": "20.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "AFC Bournemouth",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "West Ham United FC",
+    "awayTeam": "Sunderland AFC",
+    "homeScore": 3,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Burnley FC",
+    "awayTeam": "Tottenham Hotspur FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Fulham FC",
+    "awayTeam": "Brighton & Hove Albion FC",
+    "homeScore": 2,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Manchester City FC",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Liverpool FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Nottingham Forest FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Crystal Palace FC",
+    "awayTeam": "Chelsea FC",
+    "homeScore": 1,
+    "awayScore": 3,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 23,
+    "date": "Sat Jan/24",
+    "time": "15.00",
+    "homeTeam": "Newcastle United FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 0,
+    "awayScore": 2,
+    "halfTimeScore": "0-1"
+  },
+  {
+    "matchday": 23,
+    "date": "Sun Jan/25",
+    "time": "15.00",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Manchester United FC",
+    "homeScore": 2,
+    "awayScore": 3,
+    "halfTimeScore": "1-2"
+  },
+  {
+    "matchday": 23,
+    "date": "Mon Jan/26",
+    "time": "20.00",
+    "homeTeam": "Everton FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "12.30",
+    "homeTeam": "Arsenal FC",
+    "awayTeam": "Leeds United FC",
+    "homeScore": 4,
+    "awayScore": 0,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "15.00",
+    "homeTeam": "Brighton & Hove Albion FC",
+    "awayTeam": "Everton FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "15.00",
+    "homeTeam": "AFC Bournemouth",
+    "awayTeam": "Wolverhampton Wanderers FC",
+    "homeScore": 2,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "15.00",
+    "homeTeam": "Chelsea FC",
+    "awayTeam": "West Ham United FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "1-2"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "15.00",
+    "homeTeam": "Liverpool FC",
+    "awayTeam": "Newcastle United FC",
+    "homeScore": 4,
+    "awayScore": 1,
+    "halfTimeScore": "2-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "15.00",
+    "homeTeam": "Brentford FC",
+    "awayTeam": "Aston Villa FC",
+    "homeScore": 1,
+    "awayScore": 0,
+    "halfTimeScore": "0-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sat Jan/31",
+    "time": "17.30",
+    "homeTeam": "Manchester United FC",
+    "awayTeam": "Fulham FC",
+    "homeScore": 3,
+    "awayScore": 2,
+    "halfTimeScore": "1-1"
+  },
+  {
+    "matchday": 24,
+    "date": "Sun Feb/1",
+    "time": "14.00",
+    "homeTeam": "Nottingham Forest FC",
+    "awayTeam": "Crystal Palace FC",
+    "homeScore": 1,
+    "awayScore": 1,
+    "halfTimeScore": "1-0"
+  },
+  {
+    "matchday": 24,
+    "date": "Sun Feb/1",
+    "time": "16.30",
+    "homeTeam": "Tottenham Hotspur FC",
+    "awayTeam": "Manchester City FC",
+    "homeScore": 2,
+    "awayScore": 2,
+    "halfTimeScore": "0-2"
+  },
+  {
+    "matchday": 24,
+    "date": "Mon Feb/2",
+    "time": "20.00",
+    "homeTeam": "Sunderland AFC",
+    "awayTeam": "Burnley FC",
+    "homeScore": 3,
+    "awayScore": 0,
+    "halfTimeScore": "1-0"
+  }
+]

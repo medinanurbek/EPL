@@ -50,6 +50,11 @@ export const apiService = {
         const response = await api.get<Player>(`/players/${playerId}`);
         return response.data;
     },
+
+    async getTeamMatches(teamId: string): Promise<any> {
+        const response = await api.get<any>(`/teams/${teamId}/matches`);
+        return response.data;
+    },
 };
 
 export default api;

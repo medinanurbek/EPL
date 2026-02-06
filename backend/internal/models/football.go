@@ -82,14 +82,18 @@ type Season struct {
 }
 
 type Standing struct {
-	TeamID         string `gorm:"primaryKey" json:"teamId"`
-	Team           Team   `gorm:"foreignKey:TeamID" json:"team,omitempty"`
-	Played         int    `json:"played"`
-	Wins           int    `json:"wins"`
-	Draws          int    `json:"draws"`
-	Losses         int    `json:"losses"`
-	Points         int    `json:"points"`
-	GoalsFor       int    `json:"goalsFor"`
-	GoalsAgainst   int    `json:"goalsAgainst"`
-	GoalDifference int    `json:"goalDifference"`
+	TeamID           string   `gorm:"primaryKey" json:"teamId"`
+	Team             Team     `gorm:"foreignKey:TeamID" json:"team,omitempty"`
+	Played           int      `json:"played"`
+	Wins             int      `json:"wins"`
+	Draws            int      `json:"draws"`
+	Losses           int      `json:"losses"`
+	Points           int      `json:"points"`
+	GoalsFor         int      `json:"goalsFor"`
+	GoalsAgainst     int      `json:"goalsAgainst"`
+	GoalDifference   int      `json:"goalDifference"`
+	NextOpponent     string   `gorm:"-" json:"nextOpponent"`
+	NextOpponentLogo string   `gorm:"-" json:"nextOpponentLogo"`
+	Form             []string `gorm:"-" json:"form"`
+	Position         int      `gorm:"-" json:"position"`
 }

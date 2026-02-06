@@ -1,16 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowRight } from "lucide-react";
 
-import { allTeams } from "@/lib/match-data";
+import { apiService } from "@/lib/api";
 import { getTeamLogo } from "@/lib/utils";
+import { Team } from "@/types";
 
 export default function TeamsPage() {
     const [search, setSearch] = useState("");
+    const [teams, setTeams] = useState<Team[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const filteredTeams = allTeams.filter(t =>
+    useEffect(() => {
+        const fetchTeams = async () => {
+            try {
+                const data = await apiService.getTeams();
+                setTeams(data);
+            } catch (error) {
+                console.error("Failed to fetch teams:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTeams();
+    }, []);
+
+    const filteredTeams = teams.filter(t =>
         t.name.toLowerCase().includes(search.toLowerCase()) ||
-        t.city.toLowerCase().includes(search.toLowerCase())
+        (t.city && t.city.toLowerCase().includes(search.toLowerCase()))
     );
 
     return (
@@ -37,34 +54,38 @@ export default function TeamsPage() {
                     </div>
                 </header>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {filteredTeams.map((team) => (
-                        <Link
-                            key={team.id}
-                            to={`/teams/${team.id}`}
-                            className="group glass-card p-6 rounded-[24px] aspect-square flex flex-col items-center justify-center text-center transition-all hover:-translate-y-2 relative overflow-hidden"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#00ff85]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                {loading ? (
+                    <div className="text-white text-center text-xl font-bold animate-pulse">Loading Teams...</div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {filteredTeams.map((team) => (
+                            <Link
+                                key={team.id}
+                                to={`/teams/${team.id}`}
+                                className="group glass-card p-6 rounded-[24px] aspect-square flex flex-col items-center justify-center text-center transition-all hover:-translate-y-2 relative overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#00ff85]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                            <div className="relative w-24 h-24 mb-6 transition-transform z-10">
-                                <img
-                                    src={getTeamLogo(team.name)}
-                                    alt={team.name}
-                                    className="w-full h-full object-contain"
-                                />
-                            </div>
-
-                            <div className="relative z-10 w-full">
-                                <h3 className="text-xl font-outfit font-black text-white uppercase tracking-tighter mb-1 select-none line-clamp-1">{team.name}</h3>
-                                <p className="text-[#00ff85]/60 text-[10px] uppercase font-outfit font-bold tracking-[0.2em] mb-6">{team.city}</p>
-
-                                <div className="flex items-center justify-center gap-2 text-[#00ff85] font-outfit font-black text-[10px] uppercase tracking-[0.3em]">
-                                    View Profile <ArrowRight className="w-3.5 h-3.5" />
+                                <div className="relative w-24 h-24 mb-6 transition-transform z-10">
+                                    <img
+                                        src={getTeamLogo(team.name)}
+                                        alt={team.name}
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+
+                                <div className="relative z-10 w-full">
+                                    <h3 className="text-xl font-outfit font-black text-white uppercase tracking-tighter mb-1 select-none line-clamp-1">{team.name}</h3>
+                                    <p className="text-[#00ff85]/60 text-[10px] uppercase font-outfit font-bold tracking-[0.2em] mb-6">{team.city || "Unknown City"}</p>
+
+                                    <div className="flex items-center justify-center gap-2 text-[#00ff85] font-outfit font-black text-[10px] uppercase tracking-[0.3em]">
+                                        View Profile <ArrowRight className="w-3.5 h-3.5" />
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

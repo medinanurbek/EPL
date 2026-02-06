@@ -5,13 +5,13 @@ import { getTeamLogo } from "@/lib/utils";
 interface LeagueTableProps {
     standings: (Standing & {
         team: Team;
-        form?: ('W' | 'L' | 'D')[];
+        form?: string[];
         nextOpponentLogo?: string;
     })[];
 }
 
 export function LeagueTable({ standings }: LeagueTableProps) {
-    const getFormColor = (res: 'W' | 'L' | 'D') => {
+    const getFormColor = (res: string) => {
         switch (res) {
             case 'W': return 'bg-[#00ff85] text-[#3d195b]';
             case 'D': return 'bg-[#76766f] text-white';
@@ -100,11 +100,15 @@ export function LeagueTable({ standings }: LeagueTableProps) {
                                 </td>
                                 <td className="px-6 py-6 text-center">
                                     <div className="relative w-7 h-7 mx-auto opacity-20 group-hover:opacity-100 transition-all group-hover:scale-110">
-                                        <img
-                                            src={getTeamLogo(pos === 1 ? 'Manchester City' : 'Arsenal')}
-                                            alt="Next"
-                                            className="w-full h-full object-contain grayscale group-hover:grayscale-0"
-                                        />
+                                        {row.nextOpponentLogo ? (
+                                            <img
+                                                src={row.nextOpponentLogo}
+                                                alt={row.nextOpponent || "Next"}
+                                                className="w-full h-full object-contain grayscale group-hover:grayscale-0"
+                                            />
+                                        ) : (
+                                            <span className="text-[10px] text-white/20">-</span>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

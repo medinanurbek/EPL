@@ -1,9 +1,27 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { format } from "date-fns";
 import { Trophy, Calendar, Users, ArrowRight, Rocket, Zap, User, TrendingUp } from "lucide-react";
-import { topScorers, topAssistants, latestResults, upcomingFixtures } from "@/lib/match-data";
+import { topScorers, topAssistants } from "@/lib/match-data";
 import { getTeamLogo } from "@/lib/utils";
 import { MatchCard } from "@/components/features/matches/MatchCard";
+import { useState, useEffect } from "react";
+import { Standing, Match, Team } from "@/types";
+
+interface BackendMatch {
+    matchday: number;
+    date: string;
+    time: string;
+    homeTeam: string;
+    awayTeam: string;
+    homeScore: number;
+    awayScore: number;
+    halfTimeScore: string;
+}
+
+const isValidDate = (date: string) => {
+    return !isNaN(Date.parse(date));
+};
 
 export default function HomeLanding() {
     const features = [
@@ -11,6 +29,70 @@ export default function HomeLanding() {
         { title: "Match Center", description: "Schedule fixtures and log live events with the official logger.", icon: Calendar, href: "/matches", color: "bg-[#ff005a]" },
         { title: "Club Profiles", description: "Detailed squad lists and stadium information for all 20 clubs.", icon: Users, href: "/teams", color: "bg-[#025da4]" },
     ];
+
+    const [standings, setStandings] = useState<Standing[]>([]);
+    const [latestMatches, setLatestMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
+    const [upcomingMatches, setUpcomingMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
+
+    useEffect(() => {
+        // Fetch Standings
+        fetch("http://localhost:8080/api/standings")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setStandings(data);
+                }
+            })
+            .catch(err => console.error(err));
+
+        // Transform backend match to frontend match
+        const transformMatch = (bm: BackendMatch): Match & { homeTeam: Team; awayTeam: Team } => {
+            // Append current year or next year roughly based on month
+            // "Sat Feb/7" -> "Sat Feb 7 2026"
+            let dateStr = bm.date.replace("/", " ");
+            if (!dateStr.includes("202")) {
+                dateStr += " 2026"; // Assume 2026 for Jan-May matches
+            }
+
+            return {
+                id: Math.random().toString(36).substr(2, 9),
+                homeTeamId: "0",
+                awayTeamId: "0",
+                homeScore: bm.homeScore,
+                awayScore: bm.awayScore,
+                date: dateStr,
+                status: bm.homeScore !== undefined && bm.homeScore !== 0 ? "FINISHED" : (bm.time ? "SCHEDULED" : "SCHEDULED"),
+                // Note: simplified status logic. If score exists, likely finished.
+                seasonId: "2025-26",
+                homeTeam: { id: "0", name: bm.homeTeam, shortName: bm.homeTeam, city: "", stadium: "Stadium" },
+                awayTeam: { id: "0", name: bm.awayTeam, shortName: bm.awayTeam, city: "", stadium: "Stadium" }
+            };
+        };
+
+        // Fetch Latest Results
+        fetch("http://localhost:8080/api/matches/latest")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    const transformed = data.map(transformMatch).map(m => ({ ...m, status: "FINISHED" as const }));
+                    setLatestMatches(transformed);
+                }
+            })
+            .catch(err => console.error(err));
+
+        // Fetch Upcoming Fixtures
+        fetch("http://localhost:8080/api/matches/upcoming")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    const transformed = data.map(transformMatch);
+                    setUpcomingMatches(transformed);
+                }
+            })
+            .catch(err => console.error(err));
+    }, []);
+
+    const topThree = standings.slice(0, 3);
 
     return (
         <div className="flex flex-col min-h-screen bg-[#37003c]">
@@ -76,35 +158,35 @@ export default function HomeLanding() {
                                 </div>
 
                                 <div className="space-y-4 relative z-10">
-                                    {[
-                                        { rank: 1, name: "Manchester City", points: 45, logo: "manchester-city", form: ["W", "W", "W", "W", "D"] },
-                                        { rank: 2, name: "Arsenal", points: 42, logo: "arsenal", form: ["W", "W", "D", "W", "W"] },
-                                        { rank: 3, name: "Liverpool", points: 40, logo: "liverpool", form: ["W", "D", "L", "W", "W"] }
-                                    ].map((team) => (
-                                        <div key={team.rank} className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                                    {topThree.length > 0 ? topThree.map((item, index) => (
+                                        <div key={item.teamId} className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
                                             <div className="flex items-center gap-4">
-                                                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${team.rank === 1 ? "bg-[#cfae24] text-[#37003c]" : "bg-white/10 text-white"
+                                                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${index + 1 === 1 ? "bg-[#cfae24] text-[#37003c]" : "bg-white/10 text-white"
                                                     }`}>
-                                                    {team.rank}
+                                                    {index + 1}
                                                 </span>
                                                 <div className="flex items-center gap-3">
                                                     <div className="relative w-8 h-8">
-                                                        <img src={getTeamLogo(team.name)} alt={team.name} className="w-full h-full object-contain" />
+                                                        {item.team && (
+                                                            <img src={getTeamLogo(item.team.name)} alt={item.team.name} className="w-full h-full object-contain" />
+                                                        )}
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className="text-white font-black text-sm uppercase">{team.name}</span>
-                                                        <div className="flex gap-1 mt-1">
-                                                            {team.form.map((res, i) => (
-                                                                <span key={i} className={`w-1.5 h-1.5 rounded-full ${res === "W" ? "bg-[#00ff85]" : res === "D" ? "bg-slate-400" : "bg-[#ff005a]"
-                                                                    }`} />
-                                                            ))}
+                                                        <span className="text-white font-black text-sm uppercase">{item.team?.name || "Unknown"}</span>
+                                                        {/* Form removed as it's not in backend yet */}
+                                                        <div className="text-[10px] text-white/40 font-bold tracking-wider mt-0.5">
+                                                            {item.played} PL | {item.goalDifference > 0 ? '+' : ''}{item.goalDifference} GD
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span className="text-2xl font-black text-white italic">{team.points}</span>
+                                            <span className="text-2xl font-black text-white italic">{item.points}</span>
                                         </div>
-                                    ))}
+                                    )) : (
+                                        <div className="text-center py-8 text-white/30 font-bold uppercase tracking-widest text-xs">
+                                            Loading Standings...
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
@@ -186,9 +268,12 @@ export default function HomeLanding() {
                                     <Link to="/matches" className="text-[10px] font-outfit font-black text-[#ff2882] uppercase tracking-widest hover:text-[#00ff85] transition-colors">See All</Link>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {latestResults.slice(0, 2).map((match) => (
+                                    {latestMatches.map((match) => (
                                         <MatchCard key={match.id} match={match} />
                                     ))}
+                                    {latestMatches.length === 0 && (
+                                        <div className="col-span-2 text-center py-8 text-white/30 font-bold uppercase tracking-widest text-xs">Loading Results...</div>
+                                    )}
                                 </div>
                             </section>
 
@@ -201,7 +286,7 @@ export default function HomeLanding() {
                                     </h2>
                                 </div>
                                 <div className="space-y-4">
-                                    {upcomingFixtures.map((match) => (
+                                    {upcomingMatches.map((match) => (
                                         <div key={match.id} className="bg-white/5 backdrop-blur-md p-6 rounded-2xl flex items-center justify-between shadow-sm border border-white/5 group hover:border-[#00ff85] transition-all">
                                             <div className="flex items-center gap-6 flex-1 justify-end">
                                                 <span className="font-outfit font-black text-white text-xs uppercase hidden sm:block">{match.homeTeam.name}</span>
@@ -213,7 +298,8 @@ export default function HomeLanding() {
                                             <div className="px-8 flex flex-col items-center">
                                                 <div className="text-sm font-outfit font-black text-white/40 mb-1">vs</div>
                                                 <div className="text-[9px] font-outfit font-black text-[#37003c] bg-[#00ff85] px-3 py-1 rounded-full uppercase tracking-tighter">
-                                                    {new Date(match.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+                                                    {/* Attempt to parse date, fallback to raw string if fail */}
+                                                    {isValidDate(match.date) ? format(new Date(match.date), "HH:mm") : "TBD"}
                                                 </div>
                                             </div>
 
@@ -225,6 +311,9 @@ export default function HomeLanding() {
                                             </div>
                                         </div>
                                     ))}
+                                    {upcomingMatches.length === 0 && (
+                                        <div className="text-center py-8 text-white/30 font-bold uppercase tracking-widest text-xs">Loading Fixtures...</div>
+                                    )}
                                 </div>
                             </section>
                         </div>

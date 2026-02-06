@@ -59,6 +59,11 @@ export interface Standing {
     goalsFor: number;
     goalsAgainst: number;
     goalDifference: number;
+    team: Team;
+    nextOpponent?: string;
+    nextOpponentLogo?: string;
+    form?: string[];
+    position: number;
 }
 
 export interface MatchEvent {

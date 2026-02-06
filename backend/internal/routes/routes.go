@@ -28,12 +28,17 @@ func SetupRoutes(r *gin.Engine) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 	api.GET("/matches", footballHandler.GetMatches)
-	api.GET("/matches/:id", footballHandler.GetMatchByID) // Implemented in handler? Need to check.
+	api.GET("/matches/:id", footballHandler.GetMatchByID)
 	api.GET("/standings", footballHandler.GetStandings)
 	api.GET("/teams", footballHandler.GetTeams)
 	api.GET("/teams/:id", footballHandler.GetTeamByID)
+	api.GET("/teams/:id/matches", footballHandler.GetTeamMatches)
 	api.GET("/teams/:id/squad", footballHandler.GetTeamSquad)
 	api.GET("/players/:id", footballHandler.GetPlayerByID)
+	api.GET("/matches/results-json", footballHandler.GetResultsJSON)
+	api.GET("/matches/next-json", footballHandler.GetNextMatchesJSON)
+	api.GET("/matches/latest", footballHandler.GetLatestResults)
+	api.GET("/matches/upcoming", footballHandler.GetUpcomingFixtures)
 
 	// Protected Routes (User)
 	protected := api.Group("/")
