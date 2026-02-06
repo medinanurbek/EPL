@@ -1,0 +1,51 @@
+package routes
+
+import (
+	"github.com/Sanat-07/English-Premier-League/backend/internal/handlers"
+	"github.com/Sanat-07/English-Premier-League/backend/internal/middleware"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRoutes(r *gin.Engine) {
+	api := r.Group("/api")
+
+	// Middleware
+	api.Use(middleware.CORSMiddleware())
+
+	// Auth Routes
+	authHandler := handlers.NewAuthHandler()
+	auth := api.Group("/auth")
+	{
+		auth.POST("/register", authHandler.Register)
+		auth.POST("/login", authHandler.Login)
+	}
+
+	// Football Routes
+	footballHandler := handlers.NewFootballHandler()
+
+	// Public Routes
+	api.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	})
+	api.GET("/matches", footballHandler.GetMatches)
+	api.GET("/matches/:id", footballHandler.GetMatchByID) // Implemented in handler? Need to check.
+	api.GET("/standings", footballHandler.GetStandings)
+	api.GET("/teams", footballHandler.GetTeams)
+	api.GET("/teams/:id", footballHandler.GetTeamByID)
+	api.GET("/teams/:id/squad", footballHandler.GetTeamSquad)
+	api.GET("/players/:id", footballHandler.GetPlayerByID)
+
+	// Protected Routes (User)
+	protected := api.Group("/")
+	protected.Use(middleware.AuthMiddleware())
+	{
+		// User specific routes if any
+	}
+
+	// Admin Routes
+	admin := api.Group("/")
+	admin.Use(middleware.AdminMiddleware())
+	{
+		admin.POST("/matches", footballHandler.CreateMatch)
+	}
+}

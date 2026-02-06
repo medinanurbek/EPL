@@ -11,6 +11,7 @@ import Matches from '@/pages/Matches';
 import Stats from '@/pages/Stats';
 import Teams from '@/pages/Teams';
 import TeamDetails from '@/pages/TeamDetails';
+import TeamSquad from '@/pages/TeamSquad';
 import PlayerDetails from '@/pages/PlayerDetails';
 
 // Admin Pages
@@ -34,7 +35,8 @@ function App() {
                         <Route path="/stats" element={<Stats />} />
 
                         <Route path="/teams" element={<Teams />} />
-                        <Route path="/teams/:teamId" element={<TeamDetails />} />
+                        <Route path="/teams/:id" element={<TeamDetails />} />
+                        <Route path="/teams/:id/squad" element={<TeamSquad />} />
 
                         <Route path="/players/:playerId" element={<PlayerDetails />} />
 

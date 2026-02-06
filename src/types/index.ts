@@ -15,9 +15,21 @@ export interface Player {
     id: string;
     teamId: string;
     name: string;
+    commonName?: string;
+    firstName?: string;
+    lastName?: string;
+    displayName?: string;
     position: PlayerPosition;
+    detailedPosition?: string;
     nationality: string;
+    nationalityCode?: string;
     number: number;
+    height?: number;
+    weight?: number;
+    dateOfBirth?: string;
+    imagePath?: string;
+    isCaptain?: boolean;
+    statistics?: any;
 }
 
 export interface Match {

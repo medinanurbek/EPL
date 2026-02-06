@@ -1,0 +1,2 @@
+API= EYG7VsDUN0BeetGy3ahvlXX1oftKQzsqHzjplb99YWSs9Kt8ZYUVA5KLnrca
+https://api.sportmonks.com/v3/football/standings/seasons/25583?include=participant;rule.type;details.type;form;stage;league;group/EYG7VsDUN0BeetGy3ahvlXX1oftKQzsqHzjplb99YWSs9Kt8ZYUVA5KLnrca

@@ -1,34 +1,28 @@
 import { Team, Player } from "@/types";
 import { Shield, Users, ArrowLeft, Target, Award, TrendingUp, ChevronRight, MapPin } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { apiService } from "@/lib/api";
 
 // Mock Data - In real app, fetch based on teamId
 const mockTeam: Team = {
-    id: "1",
-    name: "Liverpool",
-    city: "Liverpool",
-    stadium: "Anfield",
-    shortName: "LIV"
+    id: "9",
+    name: "Manchester City",
+    city: "Manchester",
+    stadium: "Etihad Stadium",
+    shortName: "MCI"
 };
-
-const mockSquad: Player[] = [
-    { id: "p1", teamId: "1", name: "Alisson Becker", position: "Goalkeeper", nationality: "Brazil", number: 1 },
-    { id: "p2", teamId: "1", name: "Virgil van Dijk", position: "Defender", nationality: "Netherlands", number: 4 },
-    { id: "p3", teamId: "1", name: "Mohamed Salah", position: "Forward", nationality: "Egypt", number: 11 },
-    { id: "p4", teamId: "1", name: "Trent Alexander-Arnold", position: "Defender", nationality: "England", number: 66 },
-    { id: "p5", teamId: "1", name: "Darwin Núñez", position: "Forward", nationality: "Uruguay", number: 9 },
-];
 
 // Club Information
 const clubInfo = {
-    founded: 1892,
-    stadium: "Anfield",
-    capacity: "53,394",
+    founded: 1880,
+    stadium: "Etihad Stadium",
+    capacity: "53,400",
 };
 
 // Next Match
 const nextMatch = {
-    homeTeam: "Liverpool",
+    homeTeam: "Manchester City",
     awayTeam: "Sunderland",
     date: "Dec 3, 2025",
     time: "20:00",
@@ -38,32 +32,54 @@ const nextMatch = {
 // Team Form (Last 5 matches) - most recent first
 const teamForm = [
     { result: "W", opponent: "WHU", score: "2-0", date: "NOV 30" },
-    { result: "L", opponent: "NFO", score: "0-3", date: "NOV 23" },
-    { result: "W", opponent: "MCI", score: "3-0", date: "NOV 9" },
+    { result: "W", opponent: "NFO", score: "3-0", date: "NOV 23" },
+    { result: "W", opponent: "LIV", score: "3-0", date: "NOV 9" },
     { result: "W", opponent: "AVL", score: "2-0", date: "NOV 2" },
-    { result: "D", opponent: "LEE", score: "3-3", date: "DEC 6" },
+    { result: "W", opponent: "LEE", score: "3-1", date: "DEC 6" },
 ];
 
-// League Table Position
+// League Table Position - 2025/26 Season
 const tablePosition = {
-    position: 11,
-    team: "Liverpool",
-    played: 23,
-    wins: 12,
-    draws: 5,
-    losses: 6,
-    points: 41,
+    position: 2,
+    team: "Manchester City",
+    played: 21,
+    wins: 13,
+    draws: 4,
+    losses: 4,
+    points: 43,
+    goalsFor: 45,
+    goalsAgainst: 19,
+    cleanSheets: 9,
 };
 
-// Top Performers
+// Top Performers - 2025/26 Season
 const topPerformers = {
-    topScorer: { name: "Brian Brobbey", goals: 5 },
-    mostAssists: { name: "Granit Xhaka", assists: 5 },
-    mostPasses: { name: "Granit Xhaka", passes: 850 },
+    topScorer: { name: "Erling Haaland", goals: 20 },
+    mostAssists: { name: "Rayan Cherki", assists: 7 },
+    mostPasses: { name: "Rodri", passes: 1650 },
 };
 
 export default function TeamDetailsPage() {
-    useParams();
+    const { id: teamId } = useParams();
+    const [squad, setSquad] = useState<Player[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchSquad = async () => {
+            try {
+                setLoading(true);
+                const data = await apiService.getTeamSquad(mockTeam.id);
+                setSquad(data);
+            } catch (error) {
+                console.error('Failed to fetch squad:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSquad();
+    }, [teamId]);
+
     const getLogoPath = (teamName: string) => {
         const slug = teamName.toLowerCase().replace(/\s+/g, '-');
         return `/logos/${slug}.football-logos.cc.svg`;
@@ -79,7 +95,7 @@ export default function TeamDetailsPage() {
                     </Link>
 
                     <div className="flex items-center gap-8">
-                        <div className="relative w-32 h-32 bg-gradient-to-br from-red-600 to-red-700 rounded-3xl flex items-center justify-center shadow-2xl">
+                        <div className="relative w-32 h-32 bg-gradient-to-br from-sky-400 to-sky-500 rounded-3xl flex items-center justify-center shadow-2xl">
                             <img
                                 src={getLogoPath(mockTeam.name)}
                                 alt={mockTeam.name}
@@ -200,7 +216,7 @@ export default function TeamDetailsPage() {
                                         Top Goal Scorer
                                     </div>
                                     <div className="bg-[#1a0020] rounded-xl p-4 border border-white/5">
-                                        <div className="w-16 h-16 bg-red-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                        <div className="w-16 h-16 bg-sky-500 rounded-full mx-auto mb-3 flex items-center justify-center">
                                             < Shield className="w-8 h-8 text-white" />
                                         </div>
                                         <div className="text-white font-bold text-sm mb-1">{topPerformers.topScorer.name}</div>
@@ -215,7 +231,7 @@ export default function TeamDetailsPage() {
                                         Most Assists
                                     </div>
                                     <div className="bg-[#1a0020] rounded-xl p-4 border border-white/5">
-                                        <div className="w-16 h-16 bg-red-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                        <div className="w-16 h-16 bg-sky-500 rounded-full mx-auto mb-3 flex items-center justify-center">
                                             < Shield className="w-8 h-8 text-white" />
                                         </div>
                                         <div className="text-white font-bold text-sm mb-1">{topPerformers.mostAssists.name}</div>
@@ -230,7 +246,7 @@ export default function TeamDetailsPage() {
                                         Most Successful Passes
                                     </div>
                                     <div className="bg-[#1a0020] rounded-xl p-4 border border-white/5">
-                                        <div className="w-16 h-16 bg-red-600 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                        <div className="w-16 h-16 bg-sky-500 rounded-full mx-auto mb-3 flex items-center justify-center">
                                             < Shield className="w-8 h-8 text-white" />
                                         </div>
                                         <div className="text-white font-bold text-sm mb-1">{topPerformers.mostPasses.name}</div>
@@ -255,7 +271,7 @@ export default function TeamDetailsPage() {
                                 <div className="text-6xl font-black text-white mb-2">
                                     {tablePosition.position}<sup className="text-2xl">th</sup>
                                 </div>
-                                <div className="text-white/60 text-sm">Down 2 places from MW 13</div>
+                                <div className="text-white/60 text-sm">Steady at 2nd place</div>
                             </div>
                             <div className="space-y-3">
                                 <div className="flex justify-between text-sm">
@@ -278,31 +294,56 @@ export default function TeamDetailsPage() {
                                     <span className="text-white/60">Pts</span>
                                     <span className="text-white font-black text-lg">{tablePosition.points}</span>
                                 </div>
+                                <div className="flex justify-between text-sm pt-2">
+                                    <span className="text-white/60">GF / GA</span>
+                                    <span className="text-white font-bold">{tablePosition.goalsFor} / {tablePosition.goalsAgainst}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-white/60">Clean Sheets</span>
+                                    <span className="text-white font-bold">{tablePosition.cleanSheets}</span>
+                                </div>
                             </div>
                         </section>
 
                         {/* Squad List */}
                         <section className="bg-[#2d0032] rounded-2xl p-6 border border-white/5">
                             <h3 className="text-white font-bold mb-6">Squad</h3>
-                            <div className="space-y-3">
-                                {mockSquad.slice(0, 5).map((player) => (
-                                    <Link
-                                        key={player.id}
-                                        to={`/players/${player.id}`}
-                                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group"
-                                    >
-                                        <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/60 text-sm font-bold">
-                                            {player.number}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="text-white text-sm font-semibold group-hover:text-purple-300 transition-colors">{player.name}</div>
-                                            <div className="text-white/40 text-xs">{player.position}</div>
-                                        </div>
-                                        <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                                    </Link>
-                                ))}
-                            </div>
-                            <Link to="/teams/1/squad" className="block text-center text-purple-300 hover:text-white text-sm font-semibold mt-4">
+                            {loading ? (
+                                <div className="text-center text-white/60 py-8">Loading squad...</div>
+                            ) : squad.length === 0 ? (
+                                <div className="text-center text-white/60 py-8">No squad data available</div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {squad.slice(0, 5).map((player) => (
+                                        <Link
+                                            key={player.id}
+                                            to={`/players/${player.id}`}
+                                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group"
+                                        >
+                                            {player.imagePath ? (
+                                                <img
+                                                    src={player.imagePath}
+                                                    alt={player.displayName || player.name}
+                                                    className="w-10 h-10 rounded-full object-cover bg-white/10"
+                                                />
+                                            ) : (
+                                                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/60 text-sm font-bold">
+                                                    {player.number}
+                                                </div>
+                                            )}
+                                            <div className="flex-1">
+                                                <div className="text-white text-sm font-semibold group-hover:text-purple-300 transition-colors">
+                                                    {player.displayName || player.commonName || player.name}
+                                                    {player.isCaptain && <span className="ml-2 text-yellow-400">©</span>}
+                                                </div>
+                                                <div className="text-white/40 text-xs">{player.position}</div>
+                                            </div>
+                                            <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                            <Link to={`/teams/${mockTeam.id}/squad`} className="block text-center text-purple-300 hover:text-white text-sm font-semibold mt-4">
                                 View Full Squad
                             </Link>
                         </section>
