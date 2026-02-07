@@ -6,10 +6,14 @@ import { apiService } from "@/lib/api";
 import { getTeamLogo } from "@/lib/utils";
 import { Team } from "@/types";
 
+import { useFavorites } from "@/context/FavoritesContext";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
+
 export default function TeamsPage() {
     const [search, setSearch] = useState("");
     const [teams, setTeams] = useState<Team[]>([]);
     const [loading, setLoading] = useState(true);
+    const { isFavTeam } = useFavorites();
 
     useEffect(() => {
         const fetchTeams = async () => {
@@ -28,7 +32,13 @@ export default function TeamsPage() {
     const filteredTeams = teams.filter(t =>
         t.name.toLowerCase().includes(search.toLowerCase()) ||
         (t.city && t.city.toLowerCase().includes(search.toLowerCase()))
-    );
+    ).sort((a, b) => {
+        const aFav = isFavTeam(a.id);
+        const bFav = isFavTeam(b.id);
+        if (aFav && !bFav) return -1;
+        if (!aFav && bFav) return 1;
+        return 0;
+    });
 
     return (
         <div className="py-12 bg-[#37003c] min-h-screen">
@@ -59,30 +69,39 @@ export default function TeamsPage() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {filteredTeams.map((team) => (
-                            <Link
+                            <div
                                 key={team.id}
-                                to={`/teams/${team.id}`}
-                                className="group glass-card p-6 rounded-[24px] aspect-square flex flex-col items-center justify-center text-center transition-all hover:-translate-y-2 relative overflow-hidden"
+                                className="relative group/card"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#00ff85]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <FavoriteButton
+                                    id={team.id}
+                                    type="team"
+                                    className="absolute top-4 right-4 z-20 opacity-0 group-hover/card:opacity-100 transition-opacity"
+                                />
+                                <Link
+                                    to={`/teams/${team.id}`}
+                                    className="group glass-card p-6 rounded-[24px] aspect-square flex flex-col items-center justify-center text-center transition-all hover:-translate-y-2 relative overflow-hidden block"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#00ff85]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                <div className="relative w-24 h-24 mb-6 transition-transform z-10">
-                                    <img
-                                        src={getTeamLogo(team.name)}
-                                        alt={team.name}
-                                        className="w-full h-full object-contain"
-                                    />
-                                </div>
-
-                                <div className="relative z-10 w-full">
-                                    <h3 className="text-xl font-outfit font-black text-white uppercase tracking-tighter mb-1 select-none line-clamp-1">{team.name}</h3>
-                                    <p className="text-[#00ff85]/60 text-[10px] uppercase font-outfit font-bold tracking-[0.2em] mb-6">{team.city || "Unknown City"}</p>
-
-                                    <div className="flex items-center justify-center gap-2 text-[#00ff85] font-outfit font-black text-[10px] uppercase tracking-[0.3em]">
-                                        View Profile <ArrowRight className="w-3.5 h-3.5" />
+                                    <div className="relative w-24 h-24 mb-6 transition-transform z-10">
+                                        <img
+                                            src={getTeamLogo(team.name)}
+                                            alt={team.name}
+                                            className="w-full h-full object-contain"
+                                        />
                                     </div>
-                                </div>
-                            </Link>
+
+                                    <div className="relative z-10 w-full">
+                                        <h3 className="text-xl font-outfit font-black text-white uppercase tracking-tighter mb-1 select-none line-clamp-1">{team.name}</h3>
+                                        <p className="text-[#00ff85]/60 text-[10px] uppercase font-outfit font-bold tracking-[0.2em] mb-6">{team.city || "Unknown City"}</p>
+
+                                        <div className="flex items-center justify-center gap-2 text-[#00ff85] font-outfit font-black text-[10px] uppercase tracking-[0.3em]">
+                                            View Profile <ArrowRight className="w-3.5 h-3.5" />
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
                         ))}
                     </div>
                 )}

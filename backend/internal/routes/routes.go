@@ -41,10 +41,12 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/matches/upcoming", footballHandler.GetUpcomingFixtures)
 
 	// Protected Routes (User)
-	protected := api.Group("/")
-	protected.Use(middleware.AuthMiddleware())
+	userGroup := api.Group("/user")
+	userGroup.Use(middleware.AuthMiddleware())
 	{
-		// User specific routes if any
+		userGroup.GET("/favorites", authHandler.GetFavorites)
+		userGroup.POST("/favorites/teams/:id", authHandler.ToggleFavoriteTeam)
+		userGroup.POST("/favorites/players/:id", authHandler.ToggleFavoritePlayer)
 	}
 
 	// Admin Routes

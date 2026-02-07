@@ -58,3 +58,30 @@ func (s *AuthService) Login(email, password string) (string, *models.User, error
 	token, err := utils.GenerateToken(user.ID, user.Email, user.Role)
 	return token, user, err
 }
+
+func (s *AuthService) GetUserFavorites(userID string) ([]string, []string, error) {
+	user, err := s.userRepo.GetUserByID(userID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var teamIDs []string
+	for _, t := range user.FavoriteTeams {
+		teamIDs = append(teamIDs, t.ID)
+	}
+
+	var playerIDs []string
+	for _, p := range user.FavoritePlayers {
+		playerIDs = append(playerIDs, p.ID)
+	}
+
+	return teamIDs, playerIDs, nil
+}
+
+func (s *AuthService) ToggleFavoriteTeam(userID, teamID string) error {
+	return s.userRepo.ToggleFavoriteTeam(userID, teamID)
+}
+
+func (s *AuthService) ToggleFavoritePlayer(userID, playerID string) error {
+	return s.userRepo.ToggleFavoritePlayer(userID, playerID)
+}

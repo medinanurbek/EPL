@@ -1,8 +1,6 @@
-
-
 import { Heart } from "lucide-react";
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useFavorites } from "@/context/FavoritesContext";
 
 interface FavoriteButtonProps {
     id: string;
@@ -11,32 +9,19 @@ interface FavoriteButtonProps {
 }
 
 export function FavoriteButton({ id, type, className = "" }: FavoriteButtonProps) {
-    const [isFavorite, setIsFavorite] = useState(false);
+    const { isFavTeam, isFavPlayer, toggleFavTeam, toggleFavPlayer } = useFavorites();
 
-    useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem(`fav_${type}s`) || "[]");
-        setIsFavorite(favorites.includes(id));
-    }, [id, type]);
+    const isFavorite = type === "team" ? isFavTeam(id) : isFavPlayer(id);
 
-    const toggleFavorite = (e: React.MouseEvent) => {
+    const toggleFavorite = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const key = `fav_${type}s`;
-        const favorites = JSON.parse(localStorage.getItem(key) || "[]");
-
-        let newFavorites;
-        if (isFavorite) {
-            newFavorites = favorites.filter((favId: string) => favId !== id);
+        if (type === "team") {
+            await toggleFavTeam(id);
         } else {
-            newFavorites = [...favorites, id];
+            await toggleFavPlayer(id);
         }
-
-        localStorage.setItem(key, JSON.stringify(newFavorites));
-        setIsFavorite(!isFavorite);
-
-        // Dispatch a custom event to notify other components (like the profile page)
-        window.dispatchEvent(new Event("favoritesUpdated"));
     };
 
     return (

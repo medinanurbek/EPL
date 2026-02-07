@@ -20,35 +20,39 @@ import ManageTeams from '@/pages/admin/Teams';
 import ManageMatches from '@/pages/admin/Matches';
 import ManagePlayers from '@/pages/admin/Players';
 
+import { FavoritesProvider } from '@/context/FavoritesContext';
+
 function App() {
     return (
         <BrowserRouter>
-            <div className="flex flex-col min-h-screen bg-[#37003c] text-white">
-                <Navbar />
-                <main className="flex-grow">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="/standings" element={<Standings />} />
-                        <Route path="/matches" element={<Matches />} />
-                        <Route path="/stats" element={<Stats />} />
+            <FavoritesProvider>
+                <div className="flex flex-col min-h-screen bg-[#37003c] text-white">
+                    <Navbar />
+                    <main className="flex-grow">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/auth" element={<Auth />} />
+                            <Route path="/standings" element={<Standings />} />
+                            <Route path="/matches" element={<Matches />} />
+                            <Route path="/stats" element={<Stats />} />
 
-                        <Route path="/teams" element={<Teams />} />
-                        <Route path="/teams/:id" element={<TeamDetails />} />
-                        <Route path="/teams/:teamId/squad" element={<TeamSquad />} />
+                            <Route path="/teams" element={<Teams />} />
+                            <Route path="/teams/:id" element={<TeamDetails />} />
+                            <Route path="/teams/:teamId/squad" element={<TeamSquad />} />
 
-                        <Route path="/players/:playerId" element={<PlayerDetails />} />
+                            <Route path="/players/:playerId" element={<PlayerDetails />} />
 
-                        {/* Admin Routes */}
-                        <Route path="/admin" element={<AdminDashboard />} />
-                        <Route path="/admin/teams" element={<ManageTeams />} />
-                        <Route path="/admin/matches" element={<ManageMatches />} />
-                        <Route path="/admin/players" element={<ManagePlayers />} />
-                    </Routes>
-                </main>
-                <Footer />
-            </div>
+                            {/* Admin Routes */}
+                            <Route path="/admin" element={<AdminDashboard />} />
+                            <Route path="/admin/teams" element={<ManageTeams />} />
+                            <Route path="/admin/matches" element={<ManageMatches />} />
+                            <Route path="/admin/players" element={<ManagePlayers />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </FavoritesProvider>
         </BrowserRouter>
     );
 }

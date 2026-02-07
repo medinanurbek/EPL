@@ -62,3 +62,38 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		"user":  user,
 	})
 }
+
+func (h *AuthHandler) GetFavorites(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	teamIDs, playerIDs, err := h.authService.GetUserFavorites(userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"teams":   teamIDs,
+		"players": playerIDs,
+	})
+}
+
+func (h *AuthHandler) ToggleFavoriteTeam(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	teamID := c.Param("id")
+
+	if err := h.authService.ToggleFavoriteTeam(userID.(string), teamID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success"})
+}
+
+func (h *AuthHandler) ToggleFavoritePlayer(c *gin.Context) {
+	userID, _ := c.Get("userID")
+	playerID := c.Param("id")
+
+	if err := h.authService.ToggleFavoritePlayer(userID.(string), playerID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Success"})
+}

@@ -41,6 +41,7 @@ type SMPlayer struct {
 type SMNationality struct {
 	Name      string `json:"name"`
 	ImagePath string `json:"image_path"` // Country flag
+	ISO2      string `json:"iso2"`
 	ISO3      string `json:"iso3"`
 }
 
@@ -141,6 +142,7 @@ func main() {
 			DetailedPosition: pos,
 			Nationality:      smPlayer.Nationality.Name,
 			NationalityCode:  smPlayer.Nationality.ISO3,
+			NationalityISO2:  smPlayer.Nationality.ISO2,
 			Number:           item.JerseyNumber, // Use jersey number from wrapper
 			Height:           height,
 			Weight:           weight,

@@ -15,5 +15,9 @@ type User struct {
 	Email    string `gorm:"uniqueIndex;not null" json:"email"`
 	Password string `json:"-"` // Never return password
 	FullName string `json:"fullName"`
-	Role     string `gorm:"default:'GUEST'" json:"role"` // GUEST, ADMIN
+	// Favorites
+	FavoriteTeams   []Team   `gorm:"many2many:user_favorite_teams;" json:"favoriteTeams"`
+	FavoritePlayers []Player `gorm:"many2many:user_favorite_players;" json:"favoritePlayers"`
+
+	Role string `gorm:"default:'GUEST'" json:"role"` // GUEST, ADMIN
 }

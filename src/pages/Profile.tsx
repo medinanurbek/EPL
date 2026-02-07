@@ -2,58 +2,65 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Shield, Users, LogOut, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { allTeams, playerStats } from "@/lib/match-data";
 import { getTeamLogo } from "@/lib/utils";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { apiService } from "@/lib/api";
+import { useFavorites } from "@/context/FavoritesContext";
+import { Team, Player } from "@/types";
 
 export default function ProfilePage() {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
-    const [favTeams, setFavTeams] = useState<string[]>([]);
-    const [favPlayers, setFavPlayers] = useState<string[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const { favTeams, favPlayers } = useFavorites();
 
-    const loadData = () => {
-        const storedUser = localStorage.getItem("epl_current_user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-
-        const teams = JSON.parse(localStorage.getItem("fav_teams") || "[]");
-        const players = JSON.parse(localStorage.getItem("fav_players") || "[]");
-        setFavTeams(teams);
-        setFavPlayers(players);
-        setIsLoaded(true);
-    };
+    const [favoriteTeamsData, setFavoriteTeamsData] = useState<Team[]>([]);
+    const [favoritePlayersData, setFavoritePlayersData] = useState<Player[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadData();
-        window.addEventListener("favoritesUpdated", loadData);
-        window.addEventListener("auth-change", loadData);
-        return () => {
-            window.removeEventListener("favoritesUpdated", loadData);
-            window.removeEventListener("auth-change", loadData);
+        const loadData = async () => {
+            setLoading(true);
+            const storedUser = localStorage.getItem("epl_current_user");
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+
+            try {
+                // Load Teams
+                if (favTeams.length > 0) {
+                    const allTeams = await apiService.getTeams();
+                    const filtered = allTeams.filter(t => favTeams.includes(t.id));
+                    setFavoriteTeamsData(filtered);
+                } else {
+                    setFavoriteTeamsData([]);
+                }
+
+                // Load Players
+                if (favPlayers.length > 0) {
+                    const playerPromises = favPlayers.map(id => apiService.getPlayerDetails(id).catch(() => null));
+                    const players = await Promise.all(playerPromises);
+                    setFavoritePlayersData(players.filter((p): p is Player => p !== null));
+                } else {
+                    setFavoritePlayersData([]);
+                }
+            } catch (error) {
+                console.error("Failed to load favorites data", error);
+            } finally {
+                setLoading(false);
+            }
         };
-    }, []);
+
+        loadData();
+    }, [favTeams, favPlayers]);
 
     const handleLogout = () => {
+        localStorage.removeItem("epl_token");
         localStorage.removeItem("epl_current_user");
         window.dispatchEvent(new Event("auth-change"));
         navigate("/");
     };
 
-    // Combine all players from stats to have a pool of players to show
-    const allKnownPlayers = [
-        ...playerStats.goals,
-        ...playerStats.assists,
-        ...playerStats.passes,
-        ...playerStats.cleanSheets
-    ].map(p => ({ ...p, id: p.name.toLowerCase().replace(/\s+/g, "-") }));
-
-    const favoriteTeamsData = allTeams.filter(t => favTeams.includes(t.id));
-    const favoritePlayersData = allKnownPlayers.filter(p => favPlayers.includes(p.id));
-
-    if (!isLoaded) return null;
+    if (loading && !user) return <div className="text-white text-center py-20">Loading Profile...</div>;
 
     return (
         <div className="min-h-screen bg-[#37003c] text-white">
@@ -117,16 +124,18 @@ export default function ProfilePage() {
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem] flex items-center gap-6 group hover:bg-white/10 transition-all"
                                         >
-                                            <div className="relative w-16 h-16 p-2 bg-white/5 rounded-2xl">
-                                                <img src={getTeamLogo(team.name)} alt={team.name} className="w-full h-full object-contain p-2" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-black text-white uppercase tracking-tight">{team.name}</h3>
-                                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">
-                                                    <MapPin className="w-3 h-3 text-[#00ff85]" />
-                                                    {team.stadium}
+                                            <Link to={`/teams/${team.id}`} className="flex items-center gap-6 flex-1">
+                                                <div className="relative w-16 h-16 p-2 bg-white/5 rounded-2xl">
+                                                    <img src={getTeamLogo(team.name)} alt={team.name} className="w-full h-full object-contain p-2" />
                                                 </div>
-                                            </div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-lg font-black text-white uppercase tracking-tight">{team.name}</h3>
+                                                    <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">
+                                                        <MapPin className="w-3 h-3 text-[#00ff85]" />
+                                                        {team.city || "Unknown City"}
+                                                    </div>
+                                                </div>
+                                            </Link>
                                             <FavoriteButton id={team.id} type="team" />
                                         </motion.div>
                                     ))}
@@ -162,18 +171,22 @@ export default function ProfilePage() {
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem] flex items-center gap-6 group hover:bg-white/10 transition-all"
                                         >
-                                            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center p-1">
-                                                <div className="w-full h-full rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center">
-                                                    <User className="w-8 h-8 text-white/20" />
+                                            <Link to={`/players/${player.id}`} className="flex items-center gap-6 flex-1">
+                                                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center p-1 overflow-hidden">
+                                                    {player.imagePath ? (
+                                                        <img src={player.imagePath} alt={player.name} className="w-full h-full object-cover rounded-xl" />
+                                                    ) : (
+                                                        <Users className="w-8 h-8 text-white/20" />
+                                                    )}
                                                 </div>
-                                            </div>
-                                            <div className="flex-1 text-white">
-                                                <h3 className="text-lg font-black uppercase tracking-tight truncate w-32">{player.name}</h3>
-                                                <div className="flex items-center gap-2 text-[10px] font-bold text-[#ff005a] uppercase tracking-widest mt-1">
-                                                    <Shield className="w-3 h-3" />
-                                                    {player.team}
+                                                <div className="flex-1 text-white">
+                                                    <h3 className="text-lg font-black uppercase tracking-tight truncate w-32">{player.displayName || player.name}</h3>
+                                                    <div className="flex items-center gap-2 text-[10px] font-bold text-[#ff005a] uppercase tracking-widest mt-1">
+                                                        <Shield className="w-3 h-3" />
+                                                        {player.position}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </Link>
                                             <FavoriteButton id={player.id} type="player" />
                                         </motion.div>
                                     ))}
@@ -183,7 +196,8 @@ export default function ProfilePage() {
                                     <div className="py-16 bg-white/5 rounded-[2.5rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center text-center">
                                         <Users className="w-10 h-10 text-white/10 mb-4" />
                                         <p className="text-sm font-black text-white/40 uppercase tracking-widest">No players followed</p>
-                                        <Link to="/stats" className="text-[10px] font-black text-[#ff005a] uppercase tracking-tighter mt-4 hover:underline">Find a star</Link>
+                                        {/* Since we don't have a dedicated players list page, we link to a team or squads */}
+                                        <Link to="/teams" className="text-[10px] font-black text-[#ff005a] uppercase tracking-tighter mt-4 hover:underline">Browse Players</Link>
                                     </div>
                                 )}
                             </div>

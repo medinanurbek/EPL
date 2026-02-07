@@ -1,6 +1,7 @@
 import { useState, Suspense } from "react";
 import { ArrowRight, Lock, Mail, User, AlertCircle } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { apiService } from "@/lib/api";
 
 function AuthForm() {
     const [searchParams] = useSearchParams();
@@ -22,60 +23,57 @@ function AuthForm() {
         if (error) setError(null);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
 
-        // Simulate small delay for better UX
-        setTimeout(() => {
-            try {
-                const storedUsers = JSON.parse(localStorage.getItem("epl_users") || "[]");
-
-                if (mode === "register") {
-                    // Registration Logic
-                    if (!formData.email || !formData.password || !formData.fullName) {
-                        throw new Error("Please fill in all fields");
-                    }
-
-                    if (storedUsers.find((u: any) => u.email === formData.email)) {
-                        throw new Error("User with this email already exists");
-                    }
-
-                    const newUser = {
-                        id: Date.now().toString(),
-                        email: formData.email,
-                        password: formData.password,
-                        fullName: formData.fullName
-                    };
-
-                    storedUsers.push(newUser);
-                    localStorage.setItem("epl_users", JSON.stringify(storedUsers));
-                    localStorage.setItem("epl_current_user", JSON.stringify(newUser));
-
-                    // Dispatch custom event for Navbar to update
-                    window.dispatchEvent(new Event("auth-change"));
-                    navigate("/");
-                } else {
-                    // Login Logic
-                    const user = storedUsers.find((u: any) => u.email === formData.email && u.password === formData.password);
-
-                    if (!user) {
-                        throw new Error("Invalid email or password");
-                    }
-
-                    localStorage.setItem("epl_current_user", JSON.stringify(user));
-
-                    // Dispatch custom event for Navbar to update
-                    window.dispatchEvent(new Event("auth-change"));
-                    navigate("/");
+        try {
+            if (mode === "register") {
+                if (!formData.email || !formData.password || !formData.fullName) {
+                    throw new Error("Please fill in all fields");
                 }
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setIsLoading(false);
+
+                // Register
+                await apiService.register({
+                    email: formData.email,
+                    password: formData.password,
+                    fullName: formData.fullName
+                });
+
+                // Auto-login to get user details
+                const loginResponse = await apiService.login({
+                    email: formData.email,
+                    password: formData.password
+                });
+
+                localStorage.setItem("epl_token", loginResponse.token);
+                localStorage.setItem("epl_current_user", JSON.stringify(loginResponse.user));
+
+                // Dispatch custom event for Navbar to update
+                window.dispatchEvent(new Event("auth-change"));
+                navigate("/");
+            } else {
+                // Login
+                const response = await apiService.login({
+                    email: formData.email,
+                    password: formData.password
+                });
+
+                localStorage.setItem("epl_token", response.token);
+                localStorage.setItem("epl_current_user", JSON.stringify(response.user));
+
+                // Dispatch custom event for Navbar to update
+                window.dispatchEvent(new Event("auth-change"));
+                navigate("/");
             }
-        }, 1000);
+        } catch (err: any) {
+            console.error("Auth Error:", err);
+            const message = err.response?.data?.error || err.message || "Authentication failed";
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
