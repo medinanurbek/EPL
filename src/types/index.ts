@@ -23,6 +23,7 @@ export interface Player {
     detailedPosition?: string;
     nationality: string;
     nationalityCode?: string;
+    nationalityISO2?: string;
     number: number;
     height?: number;
     weight?: number;
@@ -41,6 +42,7 @@ export interface Match {
     date: string;
     status: MatchStatus;
     seasonId: string;
+    matchday?: number;
 }
 
 export interface Season {

@@ -1,6 +1,6 @@
 import { Team, Player } from "@/types";
 import { Users, ArrowLeft, ChevronRight, MapPin } from "lucide-react";
-import { getTeamLogo } from "@/lib/utils";
+import { getTeamLogo, getFlagClass } from "@/lib/utils";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiService } from "@/lib/api";
@@ -383,7 +383,12 @@ export default function TeamDetailsPage() {
                                                     {player.displayName || player.commonName || player.name}
                                                     {player.isCaptain && <span className="ml-2 text-yellow-400">©</span>}
                                                 </div>
-                                                <div className="text-white/40 text-xs">{player.position}</div>
+                                                <div className="text-white/40 text-xs flex items-center gap-2">
+                                                    {player.nationalityISO2 && (
+                                                        <span className={`fi fi-${getFlagClass(player.nationalityISO2)} w-3 h-2 rounded-[1px] shadow-sm`} />
+                                                    )}
+                                                    {player.position}
+                                                </div>
                                             </div>
                                             <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
                                         </Link>

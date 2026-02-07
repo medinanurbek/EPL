@@ -25,3 +25,13 @@ export const getTeamLogo = (teamName: string) => {
 
     return '/logo-fallback.svg';
 };
+
+export const getFlagClass = (iso2: string | undefined | null) => {
+    if (!iso2) return '';
+    const code = iso2.toLowerCase().trim();
+    // SportMonks uses 'EN' for England, 'SCT' for Scotland, etc.
+    if (code === 'en') return 'gb-eng';
+    if (code === 'sct') return 'gb-sct';
+    if (code === 'wls') return 'gb-wls';
+    return code;
+};
