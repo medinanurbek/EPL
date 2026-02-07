@@ -26,6 +26,7 @@ type Player struct {
 	DetailedPosition string `json:"detailedPosition"`
 	Nationality      string `json:"nationality"`
 	NationalityCode  string `json:"nationalityCode"`
+	NationalityISO2  string `json:"nationalityISO2"`
 	Number           int    `json:"number"`
 	Height           int    `json:"height"` // in cm
 	Weight           int    `json:"weight"` // in kg

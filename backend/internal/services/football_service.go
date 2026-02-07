@@ -39,146 +39,14 @@ type MatchJSON struct {
 }
 
 func (s *FootballService) GetStandings() ([]models.Standing, error) {
-	// 1. Get All Teams to initialize standings
-	teams, err := s.teamRepo.GetAllTeams()
-	if err != nil {
+	var standings []models.Standing
+
+	// Read standings from database with team information
+	if err := database.DB.Preload("Team").Find(&standings).Error; err != nil {
 		return nil, err
 	}
 
-	// Map: Normalized Team Name -> Pointer to Standing
-	standingsMap := make(map[string]*models.Standing)
-	// Map: Team Name -> Logo URL (for next opponent logo lookup)
-	logoMap := make(map[string]string)
-
-	for i := range teams {
-		t := teams[i]
-		normName := normalizeTeamName(t.Name)
-		standingsMap[normName] = &models.Standing{
-			TeamID: t.ID,
-			Team:   t,
-			Form:   []string{},
-		}
-		// Also map the original name to the standing entry just in case
-		// But better to rely on normalized names for keys
-		logoMap[t.Name] = t.LogoURL
-		logoMap[normalizeTeamName(t.Name)] = t.LogoURL
-	}
-
-	// 2. Process Results (Points, W/D/L, Form)
-	resultsBytes, err := os.ReadFile("../results.json")
-	if err == nil {
-		var results []MatchJSON
-		if err := json.Unmarshal(resultsBytes, &results); err == nil {
-			// Process for Table Stats
-			for _, m := range results {
-				homeName := normalizeTeamName(m.HomeTeam)
-				awayName := normalizeTeamName(m.AwayTeam)
-
-				homeStanding, okH := standingsMap[homeName]
-				awayStanding, okA := standingsMap[awayName]
-
-				if okH && okA {
-					homeStanding.Played++
-					awayStanding.Played++
-					homeStanding.GoalsFor += m.HomeScore
-					homeStanding.GoalsAgainst += m.AwayScore
-					awayStanding.GoalsFor += m.AwayScore
-					awayStanding.GoalsAgainst += m.HomeScore
-					homeStanding.GoalDifference = homeStanding.GoalsFor - homeStanding.GoalsAgainst
-					awayStanding.GoalDifference = awayStanding.GoalsFor - awayStanding.GoalsAgainst
-
-					if m.HomeScore > m.AwayScore {
-						homeStanding.Wins++
-						homeStanding.Points += 3
-						awayStanding.Losses++
-					} else if m.AwayScore > m.HomeScore {
-						awayStanding.Wins++
-						awayStanding.Points += 3
-						homeStanding.Losses++
-					} else {
-						homeStanding.Draws++
-						homeStanding.Points += 1
-						awayStanding.Draws++
-						awayStanding.Points += 1
-					}
-				}
-			}
-
-			// Process for Form (Last 5) - Iterate backwards
-			// Ensure formMap tracks per team to stop at 5
-			formCounts := make(map[string]int)
-
-			for i := len(results) - 1; i >= 0; i-- {
-				m := results[i]
-				homeName := normalizeTeamName(m.HomeTeam)
-				awayName := normalizeTeamName(m.AwayTeam)
-
-				if s, ok := standingsMap[homeName]; ok && formCounts[homeName] < 5 {
-					res := "D"
-					if m.HomeScore > m.AwayScore {
-						res = "W"
-					} else if m.HomeScore < m.AwayScore {
-						res = "L"
-					}
-					s.Form = append(s.Form, res)
-					formCounts[homeName]++
-				}
-
-				if s, ok := standingsMap[awayName]; ok && formCounts[awayName] < 5 {
-					res := "D"
-					if m.AwayScore > m.HomeScore {
-						res = "W"
-					} else if m.AwayScore < m.HomeScore {
-						res = "L"
-					}
-					s.Form = append(s.Form, res)
-					formCounts[awayName]++
-				}
-			}
-		}
-	}
-
-	// 3. Process Next Matches (Next Opponent)
-	nextBytes, err := os.ReadFile("../next_matches.json")
-	if err == nil {
-		var nextMatches []MatchJSON
-		if err := json.Unmarshal(nextBytes, &nextMatches); err == nil {
-			nextOpponentMap := make(map[string]string)
-			for _, m := range nextMatches {
-				home := normalizeTeamName(m.HomeTeam)
-				away := normalizeTeamName(m.AwayTeam)
-
-				// First encounter is the next match
-				if _, ok := nextOpponentMap[home]; !ok {
-					nextOpponentMap[home] = m.AwayTeam // Keep original name for display
-				}
-				if _, ok := nextOpponentMap[away]; !ok {
-					nextOpponentMap[away] = m.HomeTeam
-				}
-			}
-
-			for _, s := range standingsMap {
-				normName := normalizeTeamName(s.Team.Name)
-				if opp, ok := nextOpponentMap[normName]; ok {
-					s.NextOpponent = opp
-					if logo, hasLogo := logoMap[normalizeTeamName(opp)]; hasLogo {
-						s.NextOpponentLogo = logo
-					} else if logo, hasLogo := logoMap[opp]; hasLogo {
-						// Fallback to direct lookup
-						s.NextOpponentLogo = logo
-					}
-				}
-			}
-		}
-	}
-
-	// 4. Convert Map to Slice
-	var standings []models.Standing
-	for _, s := range standingsMap {
-		standings = append(standings, *s)
-	}
-
-	// 5. Sort
+	// Sort by points, then goal difference, then goals for
 	sort.Slice(standings, func(i, j int) bool {
 		if standings[i].Points != standings[j].Points {
 			return standings[i].Points > standings[j].Points
@@ -189,9 +57,55 @@ func (s *FootballService) GetStandings() ([]models.Standing, error) {
 		return standings[i].GoalsFor > standings[j].GoalsFor
 	})
 
-	// 6. Assign Position
+	// Assign positions
 	for i := range standings {
 		standings[i].Position = i + 1
+	}
+
+	// Try to load next matches for next opponent info
+	nextBytes, err := os.ReadFile("../next_matches.json")
+	if err == nil {
+		var nextMatches []MatchJSON
+		if err := json.Unmarshal(nextBytes, &nextMatches); err == nil {
+			// Map: Team Name -> Logo URL
+			logoMap := make(map[string]string)
+			for _, s := range standings {
+				logoMap[s.Team.Name] = s.Team.LogoURL
+				logoMap[normalizeTeamName(s.Team.Name)] = s.Team.LogoURL
+			}
+
+			nextOpponentMap := make(map[string]string)
+			for _, m := range nextMatches {
+				home := normalizeTeamName(m.HomeTeam)
+				away := normalizeTeamName(m.AwayTeam)
+
+				if _, ok := nextOpponentMap[home]; !ok {
+					nextOpponentMap[home] = m.AwayTeam
+				}
+				if _, ok := nextOpponentMap[away]; !ok {
+					nextOpponentMap[away] = m.HomeTeam
+				}
+			}
+
+			for i := range standings {
+				normName := normalizeTeamName(standings[i].Team.Name)
+				if opp, ok := nextOpponentMap[normName]; ok {
+					standings[i].NextOpponent = opp
+					if logo, hasLogo := logoMap[normalizeTeamName(opp)]; hasLogo {
+						standings[i].NextOpponentLogo = logo
+					} else if logo, hasLogo := logoMap[opp]; hasLogo {
+						standings[i].NextOpponentLogo = logo
+					}
+				}
+			}
+		}
+	}
+
+	// Initialize empty form array if nil
+	for i := range standings {
+		if standings[i].Form == nil {
+			standings[i].Form = []string{}
+		}
 	}
 
 	return standings, nil

@@ -33,6 +33,7 @@ export default function HomeLanding() {
     const [standings, setStandings] = useState<Standing[]>([]);
     const [latestMatches, setLatestMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
     const [upcomingMatches, setUpcomingMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
+    const [currentMatchweek, setCurrentMatchweek] = useState<number>(12);
 
     useEffect(() => {
         // Fetch Standings
@@ -64,6 +65,7 @@ export default function HomeLanding() {
                 status: bm.homeScore !== undefined && bm.homeScore !== 0 ? "FINISHED" : (bm.time ? "SCHEDULED" : "SCHEDULED"),
                 // Note: simplified status logic. If score exists, likely finished.
                 seasonId: "2025-26",
+                matchday: bm.matchday,
                 homeTeam: { id: "0", name: bm.homeTeam, shortName: bm.homeTeam, city: "", stadium: "Stadium" },
                 awayTeam: { id: "0", name: bm.awayTeam, shortName: bm.awayTeam, city: "", stadium: "Stadium" }
             };
@@ -87,6 +89,10 @@ export default function HomeLanding() {
                 if (Array.isArray(data)) {
                     const transformed = data.map(transformMatch);
                     setUpcomingMatches(transformed);
+                    // Use matchday from first upcoming fixture as current matchweek
+                    if (transformed.length > 0 && transformed[0].matchday) {
+                        setCurrentMatchweek(transformed[0].matchday);
+                    }
                 }
             })
             .catch(err => console.error(err));
@@ -116,7 +122,7 @@ export default function HomeLanding() {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#37003c] opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#37003c]"></span>
                                 </span>
-                                Matchweek 12 Live
+                                Matchweek {currentMatchweek} Live
                             </div>
                             <h1 className="text-6xl md:text-8xl font-outfit font-black text-white tracking-[-0.04em] mb-8 leading-[0.9] uppercase">
                                 2025/26 <br />
