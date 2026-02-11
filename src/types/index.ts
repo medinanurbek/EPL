@@ -9,6 +9,13 @@ export interface Team {
     city: string;
     stadium: string;
     logoUrl?: string;
+    coach?: string;
+}
+
+export interface PlayerStats {
+    goals: number;
+    assists: number;
+    cleanSheets: number;
 }
 
 export interface Player {
@@ -30,7 +37,7 @@ export interface Player {
     dateOfBirth?: string;
     imagePath?: string;
     isCaptain?: boolean;
-    statistics?: any;
+    statistics?: PlayerStats;
 }
 
 export interface Match {

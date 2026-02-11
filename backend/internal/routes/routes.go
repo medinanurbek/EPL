@@ -75,6 +75,11 @@ func SetupRoutes(r *gin.Engine) {
 
 		// Review management
 		admin.DELETE("/reviews/:id", handlers.NewReviewHandler().DeleteReview)
+
+		// Coach management
+		admin.POST("/teams/:id/coach", footballHandler.AddCoach)
+		admin.DELETE("/teams/:id/coach", footballHandler.RemoveCoach)
+		admin.PUT("/teams/:id/coach/replace", footballHandler.ReplaceCoach)
 	}
 
 	// Review Routes (Public/Protected mixed)

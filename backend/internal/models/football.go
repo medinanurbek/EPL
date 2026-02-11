@@ -10,30 +10,37 @@ type Team struct {
 	ShortName string   `bson:"shortName" json:"shortName"`
 	City      string   `bson:"city" json:"city"`
 	Stadium   string   `bson:"stadium" json:"stadium"`
+	Coach     string   `bson:"coach,omitempty" json:"coach,omitempty"`
 	LogoURL   string   `bson:"logoUrl" json:"logoUrl"`
 	Players   []Player `bson:"players,omitempty" json:"players,omitempty"`
 }
 
 type Player struct {
-	ID               string  `bson:"_id" json:"id"`
-	TeamID           string  `bson:"teamId" json:"teamId"`
-	Name             string  `bson:"name" json:"name"`
-	CommonName       string  `bson:"commonName" json:"commonName"`
-	FirstName        string  `bson:"firstName" json:"firstName"`
-	LastName         string  `bson:"lastName" json:"lastName"`
-	DisplayName      string  `bson:"displayName" json:"displayName"`
-	Position         string  `bson:"position" json:"position"`
-	DetailedPosition string  `bson:"detailedPosition" json:"detailedPosition"`
-	Nationality      string  `bson:"nationality" json:"nationality"`
-	NationalityCode  string  `bson:"nationalityCode" json:"nationalityCode"`
-	NationalityISO2  string  `bson:"nationalityISO2" json:"nationalityISO2"`
-	Number           int     `bson:"number" json:"number"`
-	Height           int     `bson:"height" json:"height"`
-	Weight           int     `bson:"weight" json:"weight"`
-	DateOfBirth      string  `bson:"dateOfBirth" json:"dateOfBirth"`
-	ImagePath        string  `bson:"imagePath" json:"imagePath"`
-	IsCaptain        bool    `bson:"isCaptain" json:"isCaptain"`
-	Statistics       *string `bson:"statistics,omitempty" json:"statistics,omitempty"`
+	ID               string      `bson:"_id" json:"id"`
+	TeamID           string      `bson:"teamId" json:"teamId"`
+	Name             string      `bson:"name" json:"name"`
+	CommonName       string      `bson:"commonName" json:"commonName"`
+	FirstName        string      `bson:"firstName" json:"firstName"`
+	LastName         string      `bson:"lastName" json:"lastName"`
+	DisplayName      string      `bson:"displayName" json:"displayName"`
+	Position         string      `bson:"position" json:"position"`
+	DetailedPosition string      `bson:"detailedPosition" json:"detailedPosition"`
+	Nationality      string      `bson:"nationality" json:"nationality"`
+	NationalityCode  string      `bson:"nationalityCode" json:"nationalityCode"`
+	NationalityISO2  string      `bson:"nationalityISO2" json:"nationalityISO2"`
+	Number           int         `bson:"number" json:"number"`
+	Height           int         `bson:"height" json:"height"`
+	Weight           int         `bson:"weight" json:"weight"`
+	DateOfBirth      string      `bson:"dateOfBirth" json:"dateOfBirth"`
+	ImagePath        string      `bson:"imagePath" json:"imagePath"`
+	IsCaptain        bool        `bson:"isCaptain" json:"isCaptain"`
+	Statistics       PlayerStats `bson:"statistics,omitempty" json:"statistics,omitempty"`
+}
+
+type PlayerStats struct {
+	Goals       int `bson:"goals" json:"goals"`
+	Assists     int `bson:"assists" json:"assists"`
+	CleanSheets int `bson:"cleanSheets" json:"cleanSheets"`
 }
 
 type MatchStatus string

@@ -141,6 +141,16 @@ export const apiService = {
         return response.data;
     },
 
+    async getLatestResults(): Promise<any[]> {
+        const response = await api.get<any[]>('/matches/latest');
+        return response.data;
+    },
+
+    async getUpcomingFixtures(): Promise<any[]> {
+        const response = await api.get<any[]>('/matches/upcoming');
+        return response.data;
+    },
+
     // Event Management (Admin)
     async editGoalEvent(matchId: string, eventId: string, data: any): Promise<void> {
         await api.put(`/matches/${matchId}/events/${eventId}`, data);
@@ -162,6 +172,19 @@ export const apiService = {
 
     async deletePlayer(playerId: string): Promise<void> {
         await api.delete(`/players/${playerId}`);
+    },
+
+    // Coach Management
+    async addCoach(teamId: string, name: string): Promise<void> {
+        await api.post(`/teams/${teamId}/coach`, { name });
+    },
+
+    async removeCoach(teamId: string): Promise<void> {
+        await api.delete(`/teams/${teamId}/coach`);
+    },
+
+    async replaceCoach(teamId: string, name: string): Promise<void> {
+        await api.put(`/teams/${teamId}/coach/replace`, { name });
     },
 };
 

@@ -1,29 +1,19 @@
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Trophy, Calendar, Users, ArrowRight, Rocket, Zap, User, TrendingUp } from "lucide-react";
 import { getTeamLogo } from "@/lib/utils";
 import { MatchCard } from "@/components/features/matches/MatchCard";
-import { useState, useEffect } from "react";
-import { Standing, Match, Team } from "@/types";
+import { Match, Team, Standing } from '../types';
+import { apiService } from '@/lib/api';
 
 interface StatEntry {
-    playerId: string;
     name: string;
-    teamName: string;
+    clubName: string;
     value: number;
-    imagePath: string;
-}
-
-interface BackendMatch {
-    matchday: number;
-    date: string;
-    time: string;
-    homeTeam: string;
-    awayTeam: string;
-    homeScore: number;
-    awayScore: number;
-    halfTimeScore: string;
+    imagePath?: string;
+    playerId: string;
 }
 
 const isValidDate = (date: string) => {
@@ -45,75 +35,89 @@ export default function HomeLanding() {
     const [topAssistants, setTopAssistants] = useState<StatEntry[]>([]);
 
     useEffect(() => {
-        // Fetch Standings
-        fetch("http://localhost:8080/api/standings")
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setStandings(data);
+        const loadHomeData = async () => {
+            try {
+                // Fetch Standings
+                const standingsData = await apiService.getStandings();
+                setStandings(standingsData);
+
+                // Fetch Latest Results
+                const latestResults = await apiService.getLatestResults();
+                const transformedLatest = latestResults.map(m => ({
+                    id: Math.random().toString(36).substr(2, 9), // Placeholder ID
+                    homeTeamId: "0", // Placeholder ID
+                    awayTeamId: "0", // Placeholder ID
+                    homeScore: m.homeScore,
+                    awayScore: m.awayScore,
+                    date: `${m.date} ${m.time}`,
+                    status: "FINISHED" as const,
+                    seasonId: "2025-26", // Hardcoded season
+                    matchday: m.matchday,
+                    homeTeam: { id: "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
+                    awayTeam: { id: "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
+                }));
+                setLatestMatches(transformedLatest);
+
+                // Fetch Upcoming Fixtures
+                const upcomingFixtures = await apiService.getUpcomingFixtures();
+                const transformedUpcoming = upcomingFixtures.map(m => ({
+                    id: Math.random().toString(36).substr(2, 9), // Placeholder ID
+                    homeTeamId: "0", // Placeholder ID
+                    awayTeamId: "0", // Placeholder ID
+                    homeScore: 0, // No score for upcoming
+                    awayScore: 0, // No score for upcoming
+                    date: `${m.date} ${m.time}`,
+                    status: "SCHEDULED" as const,
+                    seasonId: "2025-26", // Hardcoded season
+                    matchday: m.matchday,
+                    homeTeam: { id: "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
+                    awayTeam: { id: "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
+                }));
+                setUpcomingMatches(transformedUpcoming);
+
+                if (transformedUpcoming.length > 0 && transformedUpcoming[0].matchday) {
+                    setCurrentMatchweek(transformedUpcoming[0].matchday);
                 }
-            })
-            .catch(err => console.error(err));
 
-        // Transform backend match to frontend match
-        const transformMatch = (bm: BackendMatch): Match & { homeTeam: Team; awayTeam: Team } => {
-            // Append current year or next year roughly based on month
-            // "Sat Feb/7" -> "Sat Feb 7 2026"
-            let dateStr = bm.date.replace("/", " ");
-            if (!dateStr.includes("202")) {
-                dateStr += " 2026"; // Assume 2026 for Jan-May matches
+                // Fetch Stats for widgets (Goals/Assists)
+                const players = await apiService.getPlayers();
+
+                // Create a map for teamId -> teamName from standings
+                const teamMap: Record<string, string> = {};
+                standingsData.forEach(s => {
+                    teamMap[s.teamId] = s.team.name;
+                });
+
+                const scorers = [...players]
+                    .sort((a, b) => (b.statistics?.goals || 0) - (a.statistics?.goals || 0))
+                    .slice(0, 5)
+                    .map(p => ({
+                        playerId: p.id,
+                        name: p.name,
+                        clubName: teamMap[p.teamId] || p.teamId,
+                        value: p.statistics?.goals || 0,
+                        imagePath: p.imagePath
+                    }));
+                setTopScorers(scorers);
+
+                const assisters = [...players]
+                    .sort((a, b) => (b.statistics?.assists || 0) - (a.statistics?.assists || 0))
+                    .slice(0, 5)
+                    .map(p => ({
+                        playerId: p.id,
+                        name: p.name,
+                        clubName: teamMap[p.teamId] || p.teamId,
+                        value: p.statistics?.assists || 0,
+                        imagePath: p.imagePath
+                    }));
+                setTopAssistants(assisters);
+
+            } catch (err) {
+                console.error("Failed to load home data", err);
             }
-
-            return {
-                id: Math.random().toString(36).substr(2, 9),
-                homeTeamId: "0",
-                awayTeamId: "0",
-                homeScore: bm.homeScore,
-                awayScore: bm.awayScore,
-                date: dateStr,
-                status: bm.homeScore !== undefined && bm.homeScore !== 0 ? "FINISHED" : (bm.time ? "SCHEDULED" : "SCHEDULED"),
-                // Note: simplified status logic. If score exists, likely finished.
-                seasonId: "2025-26",
-                matchday: bm.matchday,
-                homeTeam: { id: "0", name: bm.homeTeam, shortName: bm.homeTeam, city: "", stadium: "Stadium" },
-                awayTeam: { id: "0", name: bm.awayTeam, shortName: bm.awayTeam, city: "", stadium: "Stadium" }
-            };
         };
 
-        // Fetch Latest Results
-        fetch("http://localhost:8080/api/matches/latest")
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    const transformed = data.map(transformMatch).map(m => ({ ...m, status: "FINISHED" as const }));
-                    setLatestMatches(transformed);
-                }
-            })
-            .catch(err => console.error(err));
-
-        // Fetch Upcoming Fixtures
-        fetch("http://localhost:8080/api/matches/upcoming")
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    const transformed = data.map(transformMatch);
-                    setUpcomingMatches(transformed);
-                    // Use matchday from first upcoming fixture as current matchweek
-                    if (transformed.length > 0 && transformed[0].matchday) {
-                        setCurrentMatchweek(transformed[0].matchday);
-                    }
-                }
-            })
-            .catch(err => console.error(err));
-
-        // Fetch Stats for widgets
-        fetch("http://localhost:8080/api/stats")
-            .then(res => res.json())
-            .then(data => {
-                if (data.topScorers) setTopScorers(data.topScorers.slice(0, 3));
-                if (data.topAssists) setTopAssistants(data.topAssists.slice(0, 3));
-            })
-            .catch(err => console.error(err));
+        loadHomeData();
     }, []);
 
     const topThree = standings.slice(0, 3);
@@ -255,7 +259,7 @@ export default function HomeLanding() {
                                         </div>
                                         <div>
                                             <p className="text-xl font-outfit font-black text-white uppercase tracking-tight">{topScorers[0]?.name || 'Loading...'}</p>
-                                            <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{topScorers[0]?.teamName || ''}</p>
+                                            <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{topScorers[0]?.clubName || ''}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -281,7 +285,7 @@ export default function HomeLanding() {
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-outfit font-black text-white uppercase">{player.name}</p>
-                                                    <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{player.teamName}</p>
+                                                    <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{player.clubName}</p>
                                                 </div>
                                             </div>
                                             <div className="text-2xl font-outfit font-black text-white italic">{player.value}</div>

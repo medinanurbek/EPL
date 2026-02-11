@@ -155,34 +155,30 @@ export default function PlayerDetailsPage() {
                 </div>
 
                 {/* Statistics Section */}
-                {stats && stats.details && (
-                    <div className="glass-card p-8 md:p-12 rounded-[3rem]">
-                        <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-8">
-                            Season <span className="text-[#00ff85]">Statistics</span>
-                        </h2>
+                <div className="glass-card p-8 md:p-12 rounded-[3rem]">
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-8">
+                        Season <span className="text-[#00ff85]">Statistics</span>
+                    </h2>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            {stats.details
-                                .filter((detail: any) => {
-                                    const statName = detail.type?.name?.toLowerCase() || '';
-                                    return statName.includes('goal') && !statName.includes('conceded') ||
-                                        statName.includes('assist') ||
-                                        statName.includes('appearance') ||
-                                        statName.includes('minutes played');
-                                })
-                                .map((detail: any, index: number) => (
-                                    <div key={index} className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#00ff85]/30 transition-colors">
-                                        <div className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                            {detail.type?.name || 'Stat'}
-                                        </div>
-                                        <div className="text-3xl font-black text-white">
-                                            {detail.value?.value || 0}
-                                        </div>
-                                    </div>
-                                ))}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#00ff85]/30 transition-colors">
+                            <div className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">Goals</div>
+                            <div className="text-3xl font-black text-white">{player.statistics?.goals || 0}</div>
+                        </div>
+                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#00ff85]/30 transition-colors">
+                            <div className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">Assists</div>
+                            <div className="text-3xl font-black text-white">{player.statistics?.assists || 0}</div>
+                        </div>
+                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#00ff85]/30 transition-colors">
+                            <div className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">Clean Sheets</div>
+                            <div className="text-3xl font-black text-white">{player.statistics?.cleanSheets || 0}</div>
+                        </div>
+                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-[#00ff85]/30 transition-colors">
+                            <div className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">Appearances</div>
+                            <div className="text-3xl font-black text-white">-</div>
                         </div>
                     </div>
-                )}
+                </div>
 
                 {/* Personal Info */}
                 <div className="glass-card p-8 md:p-12 rounded-[3rem] mt-8">

@@ -10,16 +10,17 @@ export default function AdminDashboard() {
     useEffect(() => {
         const loadStats = async () => {
             try {
-                const [teams, players, matches] = await Promise.all([
+                const [teams, players] = await Promise.all([
                     apiService.getTeams(),
                     apiService.getPlayers(),
-                    apiService.getMatches(),
                 ]);
+                const matchesResponse = await apiService.getMatches();
+                const matchesList = matchesResponse?.matches || [];
                 setStats({
                     teams: teams?.length || 0,
                     players: players?.length || 0,
-                    liveMatches: (matches || []).filter((m: any) => m.status === "LIVE").length,
-                    finishedMatches: (matches || []).filter((m: any) => m.status === "FINISHED").length,
+                    liveMatches: matchesList.filter((m: any) => m.status === "LIVE").length,
+                    finishedMatches: matchesList.filter((m: any) => m.status === "FINISHED").length,
                 });
             } catch (err) {
                 console.error("Failed to load stats:", err);

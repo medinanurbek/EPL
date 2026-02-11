@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Player, Team, PlayerPosition } from "@/types";
-import { Plus, Edit2, Trash2, ArrowLeft, Check, X, User, Search, Upload } from "lucide-react";
+import { Plus, Edit2, Trash2, ArrowLeft, Check, X, User, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { apiService } from "@/lib/api";
 import { getTeamLogo } from "@/lib/utils";

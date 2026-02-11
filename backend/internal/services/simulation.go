@@ -183,6 +183,11 @@ func SimulateMatch(matchID string) {
 		} else {
 			log.Printf("[Simulation] Standings updated for match %s", matchID)
 		}
+
+		// 4. Update Player Stats (Goals, Assists, Clean Sheets)
+		if err := UpdatePlayerStatsForMatch(ctx, matchID); err != nil {
+			log.Printf("[Simulation] Error updating player stats for match %s: %v", matchID, err)
+		}
 	}()
 }
 

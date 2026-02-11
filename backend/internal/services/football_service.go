@@ -426,7 +426,12 @@ func (s *FootballService) FinishMatch(matchID string) error {
 		log.Printf("Error updating standings: %v", err)
 	}
 
-	log.Printf("[FinishMatch] Match %s finished: %d-%d. Standings updated.", matchID, homeScore, awayScore)
+	// Update individual player statistics
+	if err := UpdatePlayerStatsForMatch(context.Background(), matchID); err != nil {
+		log.Printf("Error updating player stats: %v", err)
+	}
+
+	log.Printf("[FinishMatch] Match %s finished: %d-%d. Standings and player stats updated.", matchID, homeScore, awayScore)
 	return nil
 }
 
@@ -505,8 +510,8 @@ func (s *FootballService) DeletePlayer(playerID string) error {
 
 // GetLatestResults fetches finished matches from DB and formats them for frontend
 func (s *FootballService) GetLatestResults() ([]MatchJSON, error) {
-	// Get last 10 finished matches
-	matches, err := s.matchRepo.GetLatestResultMatches(10)
+	// Get last 2 finished matches
+	matches, err := s.matchRepo.GetLatestResultMatches(2)
 	if err != nil {
 		return nil, err
 	}
@@ -537,7 +542,7 @@ func (s *FootballService) GetLatestResults() ([]MatchJSON, error) {
 
 // GetUpcomingFixtures fetches scheduled matches from DB
 func (s *FootballService) GetUpcomingFixtures() ([]MatchJSON, error) {
-	matches, err := s.matchRepo.GetUpcomingMatches(10)
+	matches, err := s.matchRepo.GetUpcomingMatches(3)
 	if err != nil {
 		return nil, err
 	}
@@ -562,4 +567,26 @@ func (s *FootballService) GetUpcomingFixtures() ([]MatchJSON, error) {
 		})
 	}
 	return upcoming, nil
+}
+
+// AddCoach adds a coach to a team, ensuring no coach currently exists
+func (s *FootballService) AddCoach(teamID, name string) error {
+	team, err := s.teamRepo.GetTeamByID(teamID)
+	if err != nil {
+		return err
+	}
+	if team.Coach != "" {
+		return fmt.Errorf("team already has a coach: %s. Use replace to change.", team.Coach)
+	}
+	return s.teamRepo.UpdateTeamCoach(teamID, name)
+}
+
+// RemoveCoach removes the coach from a team
+func (s *FootballService) RemoveCoach(teamID string) error {
+	return s.teamRepo.UpdateTeamCoach(teamID, "")
+}
+
+// ReplaceCoach updates the coach of a team (conceptually same as Update, but semantically distinct for API)
+func (s *FootballService) ReplaceCoach(teamID, name string) error {
+	return s.teamRepo.UpdateTeamCoach(teamID, name)
 }

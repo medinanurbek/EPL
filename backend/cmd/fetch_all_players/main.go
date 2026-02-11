@@ -124,12 +124,7 @@ func main() {
 				weight = int(val)
 			}
 
-			var statsStr *string
-			if len(smPlayer.Statistics) > 0 {
-				statsBytes, _ := json.Marshal(smPlayer.Statistics)
-				s := string(statsBytes)
-				statsStr = &s
-			}
+			// isCaptainVal removed
 
 			player := models.Player{
 				ID:               strconv.Itoa(smPlayer.ID),
@@ -150,7 +145,7 @@ func main() {
 				DateOfBirth:      smPlayer.DateOfBirth,
 				ImagePath:        smPlayer.ImagePath,
 				IsCaptain:        item.Captain,
-				Statistics:       statsStr,
+				Statistics:       models.PlayerStats{},
 			}
 
 			filter := bson.M{"_id": player.ID}

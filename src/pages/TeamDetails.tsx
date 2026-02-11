@@ -1,5 +1,5 @@
 import { Team, Player } from "@/types";
-import { Users, ArrowLeft, ChevronRight, MapPin } from "lucide-react";
+import { Users, User, ArrowLeft, ChevronRight, MapPin } from "lucide-react";
 import { getTeamLogo, getFlagClass } from "@/lib/utils";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -122,6 +122,12 @@ export default function TeamDetailsPage() {
                                     <Users className="w-4 h-4" />
                                     {team.stadium || "Unknown Stadium"}
                                 </div>
+                                {team.coach && (
+                                    <div className="flex items-center gap-2 text-[#00ff85] font-bold">
+                                        <User className="w-4 h-4" />
+                                        Coach: {team.coach}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

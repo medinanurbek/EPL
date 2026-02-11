@@ -345,3 +345,46 @@ func (h *FootballHandler) DeletePlayer(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Player deleted"})
 }
+
+// --- Coach Management ---
+
+func (h *FootballHandler) AddCoach(c *gin.Context) {
+	teamID := c.Param("id")
+	var input struct {
+		Name string `json:"name" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := h.service.AddCoach(teamID, input.Name); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Coach added successfully"})
+}
+
+func (h *FootballHandler) RemoveCoach(c *gin.Context) {
+	teamID := c.Param("id")
+	if err := h.service.RemoveCoach(teamID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Coach removed successfully"})
+}
+
+func (h *FootballHandler) ReplaceCoach(c *gin.Context) {
+	teamID := c.Param("id")
+	var input struct {
+		Name string `json:"name" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := h.service.ReplaceCoach(teamID, input.Name); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Coach replaced successfully"})
+}

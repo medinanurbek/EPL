@@ -112,16 +112,6 @@ func main() {
 			weight = val
 		}
 
-		// Marshal statistics to string
-		var statsStr *string
-		if len(smPlayer.Statistics) > 0 {
-			statsBytes, err := json.Marshal(smPlayer.Statistics)
-			if err == nil {
-				s := string(statsBytes)
-				statsStr = &s
-			}
-		}
-
 		player := models.Player{
 			ID:               strconv.Itoa(smPlayer.ID),
 			TeamID:           "9", // Manchester City
@@ -140,8 +130,8 @@ func main() {
 			Weight:           weight,
 			DateOfBirth:      smPlayer.DateOfBirth,
 			ImagePath:        smPlayer.ImagePath,
-			IsCaptain:        item.Captain, // Use captain status from wrapper
-			Statistics:       statsStr,     // Store raw stats JSON
+			IsCaptain:        item.Captain,         // Use captain status from wrapper
+			Statistics:       models.PlayerStats{}, // Init empty stats
 		}
 
 		// Save to DB (Upsert)

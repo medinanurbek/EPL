@@ -5,6 +5,9 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getTeamLogo } from "@/lib/utils";
 
+const isValidDate = (date: string) => {
+    return !isNaN(Date.parse(date));
+};
 interface GoalEvent {
     id: string;
     matchIndex: number;
@@ -57,7 +60,9 @@ export function MatchCard({ match, matchIndex }: MatchCardProps) {
             <div className="px-8 py-5 border-b border-white/5 flex justify-between items-center relative z-10">
                 <div className="flex items-center gap-2 text-[10px] font-outfit font-black uppercase tracking-[0.3em] text-white/40">
                     <Calendar className="w-3.5 h-4 text-white/20" />
-                    {format(new Date(match.date), "EEE d MMM yyyy")}
+                    {match.date && isValidDate(match.date)
+                        ? format(new Date(match.date), "EEE d MMM yyyy")
+                        : "Date TBD"}
                 </div>
                 <div className={`px-4 py-1.5 rounded-full text-[9px] font-outfit font-black uppercase tracking-[0.2em]
                     ${isLive ? "bg-[#ff005a] text-white shadow-[0_0_20px_rgba(255,0,90,0.4)]" : "bg-white/5 text-white/40"}

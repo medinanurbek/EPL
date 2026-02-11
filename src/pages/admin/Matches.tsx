@@ -370,7 +370,7 @@ function MatchCard({ match, onStart, onFinish, onSelect, selected, loading, acti
                         onClick={(e) => { e.stopPropagation(); onStart(match.id); }}
                         disabled={loading || !isNext}
                         className="flex-1 py-2.5 rounded-xl bg-[#00ff85] text-[#37003c] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                        title={!isNext ? `Available in Matchday ${match.matchday}` : "Start Simulation"}
+                        title={!isNext ? `Matchday ${match.matchday} is locked. Active: Matchday ${activeMatchday}` : "Start Simulation"}
                     >
                         {loading ? <span className="animate-spin w-4 h-4 border-2 border-[#37003c] border-t-transparent rounded-full" /> : <><Play className="w-3.5 h-3.5" /> Start Match</>}
                     </button>
