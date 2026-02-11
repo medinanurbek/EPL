@@ -145,24 +145,7 @@ function AuthForm() {
                     />
                 </div>
 
-                {mode === "register" && (
-                    <div className="flex gap-4 p-1 bg-white/5 rounded-2xl border border-white/5">
-                        <button
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, role: "USER" }))}
-                            className={`flex-1 py-3 rounded-xl font-outfit font-bold text-[10px] uppercase tracking-wider transition-all ${formData.role === "USER" ? "bg-[#00ff85] text-[#37003c] shadow-lg shadow-[#00ff85]/20" : "text-white/40 hover:text-white"}`}
-                        >
-                            Fan (User)
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, role: "ADMIN" }))}
-                            className={`flex-1 py-3 rounded-xl font-outfit font-bold text-[10px] uppercase tracking-wider transition-all ${formData.role === "ADMIN" ? "bg-[#ff005a] text-white shadow-lg shadow-[#ff005a]/20" : "text-white/40 hover:text-white"}`}
-                        >
-                            Staff (Admin)
-                        </button>
-                    </div>
-                )}
+
 
                 <button
                     type="submit"
