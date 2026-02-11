@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import { getTeamLogo } from "@/lib/utils";
+import { getTeamLogo } from "../lib/utils";
 import { Target, Zap, ShieldCheck } from "lucide-react";
+import { apiService } from "../lib/api";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface StatEntry {
     playerId: string;
@@ -22,16 +25,17 @@ export default function StatsPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/stats")
-            .then(res => res.json())
-            .then(data => {
+        const loadStats = async () => {
+            try {
+                const data = await apiService.getStats();
                 setStats(data);
+            } catch (err) {
+                console.error("Failed to load stats:", err);
+            } finally {
                 setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
+            }
+        };
+        loadStats();
     }, []);
 
     return (
