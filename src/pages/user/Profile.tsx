@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Shield, Users, LogOut, MapPin } from "lucide-react";
+import { User, LogOut, MapPin, Shield, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getTeamLogo } from "@/lib/utils";
-import { FavoriteButton } from "@/components/ui/FavoriteButton";
-import { apiService } from "@/lib/api";
-import { useFavorites } from "@/context/FavoritesContext";
-import { Team, Player } from "@/types";
+import { getTeamLogo } from "../../lib/utils";
+import { FavoriteButton } from "../../components/ui/FavoriteButton";
+import { apiService } from "../../lib/api";
+import { useFavorites } from "../../context/FavoritesContext";
+import { Team, Player } from "../../types";
 
 export default function ProfilePage() {
     const navigate = useNavigate();

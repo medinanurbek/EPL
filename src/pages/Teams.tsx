@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowRight } from "lucide-react";
 
-import { apiService } from "@/lib/api";
-import { getTeamLogo } from "@/lib/utils";
-import { Team } from "@/types";
+import { apiService } from "../lib/api";
+import { getTeamLogo } from "../lib/utils";
+import { Team } from "../types";
 
-import { useFavorites } from "@/context/FavoritesContext";
-import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { useFavorites } from "../context/FavoritesContext";
+import { FavoriteButton } from "../components/ui/FavoriteButton";
 
 export default function TeamsPage() {
     const [search, setSearch] = useState("");

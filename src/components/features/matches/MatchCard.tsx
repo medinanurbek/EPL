@@ -1,9 +1,10 @@
-import { Match, Team } from "@/types";
+import { Match, Team } from "../../../types";
 import { format } from "date-fns";
 import { Calendar, MapPin, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getTeamLogo } from "@/lib/utils";
+import { apiService } from "../../../lib/api";
+import { getTeamLogo } from "../../../lib/utils";
 
 const isValidDate = (date: string) => {
     return !isNaN(Date.parse(date));
@@ -20,10 +21,9 @@ interface GoalEvent {
 
 interface MatchCardProps {
     match: Match & { homeTeam: Team; awayTeam: Team };
-    matchIndex?: number;
 }
 
-export function MatchCard({ match, matchIndex }: MatchCardProps) {
+export function MatchCard({ match }: MatchCardProps) {
     const isFinished = match.status === "FINISHED";
     const isLive = match.status === "LIVE";
     const [expanded, setExpanded] = useState(false);
@@ -31,7 +31,7 @@ export function MatchCard({ match, matchIndex }: MatchCardProps) {
     const [loadingEvents, setLoadingEvents] = useState(false);
 
     const handleExpand = async () => {
-        if (!isFinished || matchIndex === undefined) return;
+        if (!isFinished) return;
 
         if (expanded) {
             setExpanded(false);
@@ -41,8 +41,7 @@ export function MatchCard({ match, matchIndex }: MatchCardProps) {
         if (events.length === 0) {
             setLoadingEvents(true);
             try {
-                const res = await fetch(`http://localhost:8080/api/matches/${matchIndex}/events`);
-                const data = await res.json();
+                const data = await apiService.getMatchEvents(match.id);
                 setEvents(data || []);
             } catch (err) {
                 console.error("Failed to fetch events:", err);
@@ -119,7 +118,7 @@ export function MatchCard({ match, matchIndex }: MatchCardProps) {
             </div>
 
             {/* Expandable Goal Events */}
-            {isFinished && matchIndex !== undefined && (
+            {isFinished && (
                 <div
                     className="px-8 py-4 border-t border-white/5 flex items-center justify-between bg-white/[0.02] relative z-10 cursor-pointer hover:bg-white/[0.05] transition-colors"
                     onClick={handleExpand}
@@ -175,7 +174,7 @@ export function MatchCard({ match, matchIndex }: MatchCardProps) {
             </AnimatePresence>
 
             {/* Stadium footer - only for non-expanded or non-finished */}
-            {(!isFinished || matchIndex === undefined) && (
+            {!isFinished && (
                 <div className="px-8 py-6 border-t border-white/5 flex items-center justify-between bg-white/[0.02] relative z-10 group/footer cursor-pointer">
                     <div className="flex items-center gap-3 text-[10px] font-outfit font-black text-white/40 uppercase tracking-[0.3em]">
                         <MapPin className="w-4 h-4 text-[#00ff85] opacity-50" />

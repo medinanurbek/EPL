@@ -1,10 +1,11 @@
-import { Team, Player } from "@/types";
+import { Team, Player } from "../types";
 import { Users, User, ArrowLeft, ChevronRight, MapPin } from "lucide-react";
-import { getTeamLogo, getFlagClass } from "@/lib/utils";
+import { getTeamLogo, getFlagClass } from "../lib/utils";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiService } from "@/lib/api";
-
+import { apiService } from "../lib/api";
+import { motion, AnimatePresence } from "framer-motion";
+import { FavoriteButton } from "../components/ui/FavoriteButton";
 // Top Performers - Placeholder for now (API doesn't provide this yet)
 // const topPerformers = {
 //    topScorer: { name: "TBD", goals: 0 },

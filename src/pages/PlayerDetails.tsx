@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Player } from "@/types";
-import { apiService } from "@/lib/api";
-import { ArrowLeft, Flag, Calendar, Ruler, Weight, MapPin } from "lucide-react";
-import { getFlagClass } from "@/lib/utils";
+import { Player, Team } from "../types";
+import { apiService } from "../lib/api";
+import { ArrowLeft, MapPin, Users, Trophy, Target, Zap, Shield, Calendar, Info, Star, Flag, Ruler, Weight } from "lucide-react";
+import { getFlagClass, getTeamLogo } from "../lib/utils";
+import { motion } from "framer-motion";
+import { FavoriteButton } from "../components/ui/FavoriteButton";
 
 export default function PlayerDetailsPage() {
     const { playerId } = useParams();

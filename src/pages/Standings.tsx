@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-import { LeagueTable } from "@/components/features/matches/LeagueTable";
-import { apiService, StandingWithTeam } from "@/lib/api";
+import { Standing, Team } from "../types";
+import { getTeamLogo } from "../lib/utils";
+import { Trophy, ArrowUpCircle, MinusCircle, ArrowDownCircle, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { apiService, StandingWithTeam } from "../lib/api";
+import { LeagueTable } from "../components/features/matches/LeagueTable";
 
 export default function StandingsPage() {
     const [standings, setStandings] = useState<StandingWithTeam[]>([]);

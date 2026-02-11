@@ -277,7 +277,7 @@ export default function MatchesPage() {
                                         exit={{ opacity: 0, y: -20 }}
                                         transition={{ delay: idx * 0.05, duration: 0.4, ease: "easeOut" }}
                                     >
-                                        <MatchCard match={match} matchIndex={activeTab === "results" ? match.matchIndex : undefined} />
+                                        <MatchCard match={match} />
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
