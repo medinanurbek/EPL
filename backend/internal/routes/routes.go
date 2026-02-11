@@ -3,6 +3,8 @@ package routes
 import (
 	"github.com/Sanat-07/English-Premier-League/backend/internal/handlers"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/middleware"
+	"github.com/Sanat-07/English-Premier-League/backend/internal/repositories"
+	"github.com/Sanat-07/English-Premier-League/backend/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,8 +22,20 @@ func SetupRoutes(r *gin.Engine) {
 		auth.POST("/login", authHandler.Login)
 	}
 
-	// Football Routes
+	// Handlers
 	footballHandler := handlers.NewFootballHandler()
+
+	// Repositories for specialized services
+	teamRepo := repositories.NewTeamRepository()
+	matchRepo := repositories.NewMatchRepository()
+
+	// Coach
+	coachService := services.NewCoachService(teamRepo)
+	coachHandler := handlers.NewCoachHandler(coachService)
+
+	// Stats
+	statsService := services.NewStatsService(matchRepo)
+	statsHandler := handlers.NewStatsHandler(statsService)
 
 	// Public Routes
 	api.GET("/health", func(c *gin.Context) {
@@ -40,10 +54,18 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/matches/next-json", footballHandler.GetNextMatchesJSON)
 	api.GET("/matches/latest", footballHandler.GetLatestResults)
 	api.GET("/matches/upcoming", footballHandler.GetUpcomingFixtures)
-	api.GET("/stats", footballHandler.GetStats)
-	api.GET("/matches/:id/events", footballHandler.GetMatchEvents)
-	api.GET("/matches/:id/live-events", footballHandler.GetMatchEventsByID)
 	api.GET("/matches/matchday/:day", footballHandler.GetMatchesByMatchday)
+
+	// Stats endpoints
+	statsGroup := api.Group("/stats")
+	{
+		statsGroup.GET("/", statsHandler.GetStats)
+		statsGroup.GET("/top-scorers", statsHandler.GetTopScorers)
+		statsGroup.GET("/top-assists", statsHandler.GetTopAssists)
+		statsGroup.GET("/clean-sheets", statsHandler.GetCleanSheets)
+	}
+	api.GET("/matches/:id/events", statsHandler.GetMatchEvents)
+	api.GET("/matches/:id/live-events", footballHandler.GetMatchEventsByID)
 
 	// Protected Routes (User)
 	userGroup := api.Group("/user")
@@ -77,12 +99,12 @@ func SetupRoutes(r *gin.Engine) {
 		admin.DELETE("/reviews/:id", handlers.NewReviewHandler().DeleteReview)
 
 		// Coach management
-		admin.POST("/teams/:id/coach", footballHandler.AddCoach)
-		admin.DELETE("/teams/:id/coach", footballHandler.RemoveCoach)
-		admin.PUT("/teams/:id/coach/replace", footballHandler.ReplaceCoach)
+		admin.POST("/teams/:id/coach", coachHandler.AddCoach)
+		admin.DELETE("/teams/:id/coach", coachHandler.RemoveCoach)
+		admin.PUT("/teams/:id/coach/replace", coachHandler.ReplaceCoach)
 	}
 
-	// Review Routes (Public/Protected mixed)
+	// Review Routes
 	reviewHandler := handlers.NewReviewHandler()
 	api.GET("/reviews", reviewHandler.GetReviews)
 
