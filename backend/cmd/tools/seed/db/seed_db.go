@@ -140,6 +140,7 @@ func main() {
 		}
 	}
 
-	CreateAdmin()
+	userColl := database.DB.Collection("users")
+	CreateAdmin(ctx, userColl)
 	fmt.Println("Seeding completed successfully!")
 }

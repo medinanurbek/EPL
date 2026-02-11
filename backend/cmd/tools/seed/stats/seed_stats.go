@@ -83,9 +83,15 @@ func main() {
 
 	// 2. Read results.json
 	fmt.Println("Reading results.json...")
-	resultsData, err := os.ReadFile("../results.json")
+	resultsData, err := os.ReadFile("./results.json") // Try local first if run from root
 	if err != nil {
-		log.Fatalf("Failed to read results.json: %v", err)
+		resultsData, err = os.ReadFile("../../results.json") // Try root from backend/cmd/seed_match_stats
+		if err != nil {
+			resultsData, err = os.ReadFile("../results.json") // Try root from backend
+			if err != nil {
+				log.Fatalf("Failed to read results.json: %v", err)
+			}
+		}
 	}
 	var results []RawMatch
 	if err := json.Unmarshal(resultsData, &results); err != nil {
@@ -94,9 +100,15 @@ func main() {
 
 	// 3. Read next_matches.json
 	fmt.Println("Reading next_matches.json...")
-	nextData, err := os.ReadFile("../next_matches.json")
+	nextData, err := os.ReadFile("./next_matches.json")
 	if err != nil {
-		log.Fatalf("Failed to read next_matches.json: %v", err)
+		nextData, err = os.ReadFile("../../next_matches.json")
+		if err != nil {
+			nextData, err = os.ReadFile("../next_matches.json")
+			if err != nil {
+				log.Fatalf("Failed to read next_matches.json: %v", err)
+			}
+		}
 	}
 	var nextMatches []RawMatch
 	if err := json.Unmarshal(nextData, &nextMatches); err != nil {
@@ -302,6 +314,94 @@ func main() {
 	fmt.Printf("   Results:      %d matches\n", len(results))
 	fmt.Printf("   Next Matches: %d matches\n", len(nextMatches))
 	fmt.Printf("   Goal Events:  %d goals from %d matches\n", totalGoals, matchesWithGoals)
+
+	// 8. Update Player Statistics in DB
+	fmt.Println("Updating player statistics in DB...")
+	playerStats := map[string]struct {
+		Goals       int
+		Assists     int
+		CleanSheets int
+	}{}
+
+	for _, ge := range goalEvents {
+		event := ge.(models.GoalEvent)
+		s := playerStats[event.ScorerID]
+		s.Goals++
+		playerStats[event.ScorerID] = s
+
+		if event.AssistID != "" {
+			a := playerStats[event.AssistID]
+			a.Assists++
+			playerStats[event.AssistID] = a
+		}
+	}
+
+	// Calculate Clean Sheets
+	for _, match := range results {
+		hs, as := 0, 0
+		if match.HomeScore != nil {
+			hs = *match.HomeScore
+		}
+		if match.AwayScore != nil {
+			as = *match.AwayScore
+		}
+
+		if as == 0 { // Home team clean sheet
+			homeNorm := normalizeTeamName(match.HomeTeam)
+			if team := teamByName[homeNorm]; team != nil {
+				if gks := playersByTeam[team.ID]; len(gks) > 0 {
+					// Find GK (Position contains 'Goalkeeper' or Number 1)
+					var gk *models.Player
+					for i := range gks {
+						if strings.Contains(strings.ToLower(gks[i].Position), "goalkeeper") || gks[i].Number == 1 {
+							gk = &gks[i]
+							break
+						}
+					}
+					if gk != nil {
+						s := playerStats[gk.ID]
+						s.CleanSheets++
+						playerStats[gk.ID] = s
+					}
+				}
+			}
+		}
+		if hs == 0 { // Away team clean sheet
+			awayNorm := normalizeTeamName(match.AwayTeam)
+			if team := teamByName[awayNorm]; team != nil {
+				if gks := playersByTeam[team.ID]; len(gks) > 0 {
+					var gk *models.Player
+					for i := range gks {
+						if strings.Contains(strings.ToLower(gks[i].Position), "goalkeeper") || gks[i].Number == 1 {
+							gk = &gks[i]
+							break
+						}
+					}
+					if gk != nil {
+						s := playerStats[gk.ID]
+						s.CleanSheets++
+						playerStats[gk.ID] = s
+					}
+				}
+			}
+		}
+	}
+
+	playerColl := database.DB.Collection("players")
+	for pID, stats := range playerStats {
+		_, err := playerColl.UpdateOne(ctx,
+			bson.M{"_id": pID},
+			bson.M{"$set": bson.M{
+				"statistics.goals":       stats.Goals,
+				"statistics.assists":     stats.Assists,
+				"statistics.cleanSheets": stats.CleanSheets,
+			}},
+		)
+		if err != nil {
+			log.Printf("Error updating stats for player %s: %v", pID, err)
+		}
+	}
+	fmt.Println("Player statistics updated successfully.")
 }
 
 // pickScorer selects a random player weighted by position

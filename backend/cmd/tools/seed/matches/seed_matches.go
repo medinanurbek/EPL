@@ -100,11 +100,19 @@ func processFile(ctx context.Context, filePath string, coll *mongo.Collection, t
 		}
 
 		// Parse Date
-		// Date format: "Fri Aug/15 2025" or "Sat Feb/7" (missing year?)
-		// If missing year, assume 2026? Or current season year.
+		// Date format examples: "Fri Aug/15", "Sat Feb/7"
 		dateStr := m.Date
 		if !strings.Contains(dateStr, "202") {
-			dateStr += " 2026"
+			// Intelligent year assignment for 2025/26 season
+			if strings.Contains(dateStr, "Aug") ||
+				strings.Contains(dateStr, "Sep") ||
+				strings.Contains(dateStr, "Oct") ||
+				strings.Contains(dateStr, "Nov") ||
+				strings.Contains(dateStr, "Dec") {
+				dateStr += " 2025"
+			} else {
+				dateStr += " 2026"
+			}
 		}
 
 		// Normalize time: "20.00" -> "20:00"

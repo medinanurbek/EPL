@@ -66,21 +66,24 @@ func main() {
 	}
 
 	// Check other tables
-	utils := []struct {
-		Name string
-		Coll string
-	}{
-		{"Users", "users"},
-		{"Players", "players"},
-		{"Matches", "matches"},
-		{"Seasons", "seasons"},
-	}
-
 	fmt.Printf("\n=== OTHER TABLES ===\n")
-	for _, u := range utils {
-		count, _ := database.DB.Collection(u.Coll).CountDocuments(ctx, bson.M{})
-		fmt.Printf("%s: %d\n", u.Name, count)
-	}
+	usersCount, _ := database.DB.Collection("users").CountDocuments(ctx, bson.M{})
+	playersCount, _ := database.DB.Collection("players").CountDocuments(ctx, bson.M{})
+	matchesCount, _ := database.DB.Collection("matches").CountDocuments(ctx, bson.M{})
+	seasonsCount, _ := database.DB.Collection("seasons").CountDocuments(ctx, bson.M{})
+	coachesCount, _ := database.DB.Collection("coaches").CountDocuments(ctx, bson.M{})
+	scorersCount, _ := database.DB.Collection("goalscorers").CountDocuments(ctx, bson.M{})
+	assistsCount, _ := database.DB.Collection("assists").CountDocuments(ctx, bson.M{})
+	cleansheetsCount, _ := database.DB.Collection("cleansheets").CountDocuments(ctx, bson.M{})
+
+	fmt.Printf("Users: %d\n", usersCount)
+	fmt.Printf("Players: %d\n", playersCount)
+	fmt.Printf("Matches: %d\n", matchesCount)
+	fmt.Printf("Seasons: %d\n", seasonsCount)
+	fmt.Printf("Coaches: %d\n", coachesCount)
+	fmt.Printf("Goalscorers (Top 10): %d\n", scorersCount)
+	fmt.Printf("Assists (Top 10): %d\n", assistsCount)
+	fmt.Printf("Clean Sheets (Top 10): %d\n", cleansheetsCount)
 
 	fmt.Println("\n✅ Database check completed!")
 }
