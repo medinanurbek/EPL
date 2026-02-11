@@ -3,8 +3,6 @@ package repositories
 import (
 	"context"
 	"log"
-	"sort"
-	"strings"
 	"time"
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
@@ -126,7 +124,7 @@ func (r *MatchRepository) GetAllPlayers() ([]models.Player, error) {
 	opts := options.Find().SetSort(bson.D{
 		{Key: "name", Value: 1},
 	}).SetProjection(bson.M{
-		"statistics": 0,
+		"statistics": 1,
 	})
 
 	cursor, err := coll.Find(ctx, bson.M{}, opts)
@@ -223,23 +221,10 @@ func (r *MatchRepository) GetTopScorers(limit int) ([]StatEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	coll := database.DB.Collection("goal_events")
-	pipeline := mongo.Pipeline{
-		{{Key: "$group", Value: bson.D{
-			{Key: "_id", Value: "$scorerId"},
-			{Key: "name", Value: bson.D{{Key: "$first", Value: "$scorerName"}}},
-			{Key: "teamName", Value: bson.D{{Key: "$first", Value: "$teamName"}}},
-			{Key: "teamId", Value: bson.D{{Key: "$first", Value: "$teamId"}}},
-			{Key: "count", Value: bson.D{{Key: "$sum", Value: 1}}},
-		}}},
-		{{Key: "$sort", Value: bson.D{
-			{Key: "count", Value: -1},
-			{Key: "name", Value: 1}, // Alphabetical tie-breaker
-		}}},
-		{{Key: "$limit", Value: limit}},
-	}
+	coll := database.DB.Collection("goalscorers")
+	opts := options.Find().SetSort(bson.M{"count": -1}).SetLimit(int64(limit))
 
-	cursor, err := coll.Aggregate(ctx, pipeline)
+	cursor, err := coll.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -248,16 +233,6 @@ func (r *MatchRepository) GetTopScorers(limit int) ([]StatEntry, error) {
 	var results []StatEntry
 	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
-	}
-
-	// Enrich with player image
-	playerColl := database.DB.Collection("players")
-	for i := range results {
-		var p models.Player
-		err := playerColl.FindOne(ctx, bson.M{"_id": results[i].PlayerID}).Decode(&p)
-		if err == nil {
-			results[i].ImagePath = p.ImagePath
-		}
 	}
 
 	return results, nil
@@ -267,30 +242,10 @@ func (r *MatchRepository) GetTopAssists(limit int) ([]StatEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	coll := database.DB.Collection("goal_events")
-	pipeline := mongo.Pipeline{
-		{{Key: "$match", Value: bson.D{
-			{Key: "assistId", Value: bson.D{
-				{Key: "$exists", Value: true},
-				{Key: "$ne", Value: ""},
-				{Key: "$ne", Value: nil},
-			}},
-		}}},
-		{{Key: "$group", Value: bson.D{
-			{Key: "_id", Value: "$assistId"},
-			{Key: "name", Value: bson.D{{Key: "$first", Value: "$assistName"}}},
-			{Key: "teamName", Value: bson.D{{Key: "$first", Value: "$teamName"}}},
-			{Key: "teamId", Value: bson.D{{Key: "$first", Value: "$teamId"}}},
-			{Key: "count", Value: bson.D{{Key: "$sum", Value: 1}}},
-		}}},
-		{{Key: "$sort", Value: bson.D{
-			{Key: "count", Value: -1},
-			{Key: "name", Value: 1}, // Alphabetical tie-breaker
-		}}},
-		{{Key: "$limit", Value: limit}},
-	}
+	coll := database.DB.Collection("assists")
+	opts := options.Find().SetSort(bson.M{"count": -1}).SetLimit(int64(limit))
 
-	cursor, err := coll.Aggregate(ctx, pipeline)
+	cursor, err := coll.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -301,15 +256,6 @@ func (r *MatchRepository) GetTopAssists(limit int) ([]StatEntry, error) {
 		return nil, err
 	}
 
-	playerColl := database.DB.Collection("players")
-	for i := range results {
-		var p models.Player
-		err := playerColl.FindOne(ctx, bson.M{"_id": results[i].PlayerID}).Decode(&p)
-		if err == nil {
-			results[i].ImagePath = p.ImagePath
-		}
-	}
-
 	return results, nil
 }
 
@@ -317,134 +263,21 @@ func (r *MatchRepository) GetCleanSheets(limit int) ([]StatEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Find all results where one side conceded 0
-	resultsColl := database.DB.Collection("results")
-	cursor, err := resultsColl.Find(ctx, bson.M{
-		"$or": []bson.M{
-			{"homeScore": 0},
-			{"awayScore": 0},
-		},
-	})
+	coll := database.DB.Collection("cleansheets")
+	opts := options.Find().SetSort(bson.M{"count": -1}).SetLimit(int64(limit))
+
+	cursor, err := coll.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(ctx)
 
-	type resultDoc struct {
-		HomeTeam  string `bson:"homeTeam"`
-		AwayTeam  string `bson:"awayTeam"`
-		HomeScore *int   `bson:"homeScore"`
-		AwayScore *int   `bson:"awayScore"`
-	}
-
-	// Count clean sheets per team name
-	csCount := map[string]int{}
-	var docs []resultDoc
-	if err := cursor.All(ctx, &docs); err != nil {
+	var results []StatEntry
+	if err := cursor.All(ctx, &results); err != nil {
 		return nil, err
 	}
 
-	normalizeTeamName := func(name string) string {
-		name = strings.TrimSuffix(name, " FC")
-		name = strings.TrimSuffix(name, " AFC")
-		if name == "AFC Bournemouth" {
-			return name
-		}
-		return name
-	}
-
-	for _, d := range docs {
-		hs, as := 0, 0
-		if d.HomeScore != nil {
-			hs = *d.HomeScore
-		}
-		if d.AwayScore != nil {
-			as = *d.AwayScore
-		}
-		// Home team kept clean sheet if awayScore == 0 and homeScore > 0
-		if as == 0 && hs > 0 {
-			csCount[normalizeTeamName(d.HomeTeam)]++
-		}
-		// Away team kept clean sheet if homeScore == 0 and awayScore > 0
-		if hs == 0 && as > 0 {
-			csCount[normalizeTeamName(d.AwayTeam)]++
-		}
-	}
-
-	// Map team names to GKs
-	teamsColl := database.DB.Collection("teams")
-	playersColl := database.DB.Collection("players")
-
-	type teamInfo struct {
-		ID   string `bson:"_id"`
-		Name string `bson:"name"`
-	}
-	teamCursor, _ := teamsColl.Find(ctx, bson.M{})
-	var allTeams []teamInfo
-	teamCursor.All(ctx, &allTeams)
-
-	teamNameToID := map[string]string{}
-	for _, t := range allTeams {
-		teamNameToID[t.Name] = t.ID
-	}
-
-	var entries []StatEntry
-	for teamName, count := range csCount {
-		teamID := teamNameToID[teamName]
-		if teamID == "" {
-			continue
-		}
-		// Find GK for this team - Sort by number ascending to find main GK
-		var gk models.Player
-		gkOpts := options.FindOne().SetSort(bson.D{{Key: "number", Value: 1}})
-		err := playersColl.FindOne(ctx, bson.M{
-			"teamId":   teamID,
-			"position": bson.M{"$regex": "(?i)goalkeeper"},
-		}, gkOpts).Decode(&gk)
-
-		if err != nil {
-			// Fallback: any GK-like
-			playersColl.FindOne(ctx, bson.M{
-				"teamId": teamID,
-				"number": 1,
-			}).Decode(&gk)
-		}
-
-		name := teamName + " GK"
-		imgPath := ""
-		playerID := teamID + "-gk"
-		if gk.ID != "" {
-			name = gk.DisplayName
-			if name == "" {
-				name = gk.Name
-			}
-			imgPath = gk.ImagePath
-			playerID = gk.ID
-		}
-
-		entries = append(entries, StatEntry{
-			PlayerID:  playerID,
-			Name:      name,
-			TeamName:  teamName,
-			TeamID:    teamID,
-			ImagePath: imgPath,
-			Value:     count,
-		})
-	}
-
-	// Sort by count desc, then name asc
-	sort.Slice(entries, func(i, j int) bool {
-		if entries[i].Value != entries[j].Value {
-			return entries[i].Value > entries[j].Value
-		}
-		return entries[i].Name < entries[j].Name
-	})
-
-	if len(entries) > limit {
-		entries = entries[:limit]
-	}
-
-	return entries, nil
+	return results, nil
 }
 
 func (r *MatchRepository) GetMatchGoalEvents(matchIndex int) ([]models.GoalEvent, error) {
@@ -587,7 +420,10 @@ func (r *MatchRepository) GetLatestResultMatches(limit int) ([]models.Match, err
 	defer cancel()
 
 	opts := options.Find().
-		SetSort(bson.D{{Key: "date", Value: -1}}). // Latest first
+		SetSort(bson.D{
+			{Key: "matchday", Value: -1},
+			{Key: "date", Value: -1},
+		}). // Latest first
 		SetLimit(int64(limit))
 
 	cursor, err := r.collection.Find(ctx, bson.M{"status": "FINISHED"}, opts)
