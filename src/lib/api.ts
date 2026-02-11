@@ -24,6 +24,21 @@ export interface StandingWithTeam extends Standing {
     team: Team;
 }
 
+export interface StatEntry {
+    playerId: string;
+    name: string;
+    teamName: string;
+    teamId: string;
+    imagePath: string;
+    value: number;
+}
+
+export interface StatsData {
+    topScorers: StatEntry[];
+    topAssists: StatEntry[];
+    cleanSheets: StatEntry[];
+}
+
 // API functions
 export const apiService = {
     // Get all teams
@@ -185,6 +200,18 @@ export const apiService = {
 
     async replaceCoach(teamId: string, name: string): Promise<void> {
         await api.put(`/teams/${teamId}/coach/replace`, { name });
+    },
+
+    // Stats
+    async getStats(): Promise<StatsData> {
+        const response = await api.get<StatsData>('/stats');
+        return response.data;
+    },
+
+    // Match Events
+    async getMatchEvents(matchId: string): Promise<any[]> {
+        const response = await api.get<any[]>(`/matches/${matchId}/events`);
+        return response.data;
     },
 };
 
