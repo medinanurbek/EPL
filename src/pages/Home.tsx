@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Trophy, Calendar, Users, ArrowRight, Rocket, Zap, User, TrendingUp } from "lucide-react";
-import { getTeamLogo } from "@/lib/utils";
-import { MatchCard } from "@/components/features/matches/MatchCard";
+import { getTeamLogo } from "../lib/utils";
+import { MatchCard } from "../components/features/matches/MatchCard";
 import { Match, Team, Standing } from '../types';
-import { apiService } from '@/lib/api';
+import { apiService } from '../lib/api';
 
 interface StatEntry {
     name: string;
