@@ -41,76 +41,62 @@ export default function HomeLanding() {
                 const standingsData = await apiService.getStandings();
                 setStandings(standingsData);
 
+                // Fetch Stats for widgets (Goals/Assists)
+                const stats = await apiService.getStats();
+
+                setTopScorers(stats.topScorers.slice(0, 3).map((s: any) => ({
+                    playerId: s.playerId,
+                    name: s.name,
+                    clubName: s.teamName,
+                    value: s.value,
+                    imagePath: s.imagePath
+                })));
+
+                setTopAssistants(stats.topAssists.slice(0, 3).map((s: any) => ({
+                    playerId: s.playerId,
+                    name: s.name,
+                    clubName: s.teamName,
+                    value: s.value,
+                    imagePath: s.imagePath
+                })));
+
                 // Fetch Latest Results
                 const latestResults = await apiService.getLatestResults();
                 const transformedLatest = latestResults.map(m => ({
-                    id: Math.random().toString(36).substr(2, 9), // Placeholder ID
-                    homeTeamId: "0", // Placeholder ID
-                    awayTeamId: "0", // Placeholder ID
+                    id: m.id || Math.random().toString(36).substr(2, 9),
+                    homeTeamId: m.homeTeamId || "0",
+                    awayTeamId: m.awayTeamId || "0",
                     homeScore: m.homeScore,
                     awayScore: m.awayScore,
-                    date: `${m.date} ${m.time}`,
+                    date: m.date, // Use direct ISO date from backend
                     status: "FINISHED" as const,
-                    seasonId: "2025-26", // Hardcoded season
+                    seasonId: "2025-26",
                     matchday: m.matchday,
-                    homeTeam: { id: "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
-                    awayTeam: { id: "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
+                    homeTeam: { id: m.homeTeamId || "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
+                    awayTeam: { id: m.awayTeamId || "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
                 }));
                 setLatestMatches(transformedLatest);
 
                 // Fetch Upcoming Fixtures
                 const upcomingFixtures = await apiService.getUpcomingFixtures();
                 const transformedUpcoming = upcomingFixtures.map(m => ({
-                    id: Math.random().toString(36).substr(2, 9), // Placeholder ID
-                    homeTeamId: "0", // Placeholder ID
-                    awayTeamId: "0", // Placeholder ID
-                    homeScore: 0, // No score for upcoming
-                    awayScore: 0, // No score for upcoming
-                    date: `${m.date} ${m.time}`,
+                    id: m.id || Math.random().toString(36).substr(2, 9),
+                    homeTeamId: m.homeTeamId || "0",
+                    awayTeamId: m.awayTeamId || "0",
+                    homeScore: 0,
+                    awayScore: 0,
+                    date: m.date, // Use direct ISO date
                     status: "SCHEDULED" as const,
-                    seasonId: "2025-26", // Hardcoded season
+                    seasonId: "2025-26",
                     matchday: m.matchday,
-                    homeTeam: { id: "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
-                    awayTeam: { id: "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
+                    homeTeam: { id: m.homeTeamId || "0", name: m.homeTeam, shortName: m.homeTeam, city: "", stadium: "" },
+                    awayTeam: { id: m.awayTeamId || "0", name: m.awayTeam, shortName: m.awayTeam, city: "", stadium: "" }
                 }));
                 setUpcomingMatches(transformedUpcoming);
 
                 if (transformedUpcoming.length > 0 && transformedUpcoming[0].matchday) {
                     setCurrentMatchweek(transformedUpcoming[0].matchday);
                 }
-
-                // Fetch Stats for widgets (Goals/Assists)
-                const players = await apiService.getPlayers();
-
-                // Create a map for teamId -> teamName from standings
-                const teamMap: Record<string, string> = {};
-                standingsData.forEach(s => {
-                    teamMap[s.teamId] = s.team.name;
-                });
-
-                const scorers = [...players]
-                    .sort((a, b) => (b.statistics?.goals || 0) - (a.statistics?.goals || 0))
-                    .slice(0, 5)
-                    .map(p => ({
-                        playerId: p.id,
-                        name: p.name,
-                        clubName: teamMap[p.teamId] || p.teamId,
-                        value: p.statistics?.goals || 0,
-                        imagePath: p.imagePath
-                    }));
-                setTopScorers(scorers);
-
-                const assisters = [...players]
-                    .sort((a, b) => (b.statistics?.assists || 0) - (a.statistics?.assists || 0))
-                    .slice(0, 5)
-                    .map(p => ({
-                        playerId: p.id,
-                        name: p.name,
-                        clubName: teamMap[p.teamId] || p.teamId,
-                        value: p.statistics?.assists || 0,
-                        imagePath: p.imagePath
-                    }));
-                setTopAssistants(assisters);
 
             } catch (err) {
                 console.error("Failed to load home data", err);
