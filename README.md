@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦁 English Premier League (EPL) Full-Stack App
 
-## Getting Started
+A modern, high-performance web application for tracking English Premier League matches, standings, and player statistics. Built with a robust **Go** backend and a premium **React/Vite** frontend.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Live Standings**: Real-time table with automated points, GD, and form calculation.
+- **Match Center**: Comprehensive fixture list, including results and upcoming matches.
+- **Player Statistics**: Dedicated leaderboards for **Top Scorers**, **Most Assists**, and **Most Clean Sheets**.
+- **Specialized Data Flow**: Uses optimized MongoDB collections for high-speed statistics retrieval.
+- **Admin Dashboard**: Secure management for matches, players, and live goal events.
+- **Premium UI**: Ultra-modern dark theme with smooth animations and responsive design.
+
+## 🛠 Tech Stack
+
+### Backend
+- **Language**: Go (Golang)
+- **Web Framework**: Gin Gonic
+- **Database**: MongoDB (with specialized collections for stats)
+- **Authentication**: JWT & Bcrypt
+
+### Frontend
+- **Framework**: React 18 with Vite
+- **Styling**: TailwindCSS & Lucide Icons
+- **Animations**: Framer Motion
+- **State Management**: React Hooks & Axios
+
+---
+
+## 🏗 Project Structure
+
+```text
+├── backend/                # Go Backend
+│   ├── cmd/
+│   │   ├── server/         # Main Entry Point (main.go)
+│   │   └── tools/          # CLI Utility Tools (Seeding, DB, Debug)
+│   ├── internal/           # Core Logic (Handlers, Services, Repos)
+│   └── models/             # Data Structures
+├── src/                    # React Frontend
+│   ├── components/         # Reusable UI Components
+│   ├── pages/              # Page Views
+│   └── lib/                # API Service and Utilities
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚦 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
+- **Go** (1.21 or higher)
+- **Node.js** (v18+) & **npm**
+- **MongoDB** (Running on `localhost:27017` or configured via `.env`)
 
-## Learn More
+### 1. Backend Setup
+```bash
+cd backend
+go mod tidy
+```
 
-To learn more about Next.js, take a look at the following resources:
+**Run the Server:**
+```bash
+go run cmd/server/main.go
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Database Tools (CLI):**
+The tools are organized in `backend/cmd/tools/`. To seed the initial data:
+```bash
+# 1. Seed base data (Players, Teams)
+go run cmd/tools/seed/db/seed_db.go
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 2. Seed match results and stats
+go run cmd/tools/seed/stats/seed_stats.go
 
-## Deploy on Vercel
+# 3. Populate specialized statistics collections
+go run cmd/tools/db/stats/populate_stats.go
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 4. Check database status
+go run cmd/tools/debug/db/check_db.go
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Frontend Setup
+```bash
+# From the root directory
+npm install
+```
+
+**Run Development Server:**
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) to view the app.
+
+---
+
+## 🔒 Security & Environment
+Ensure you create a `.env` file in the `backend/` directory with the following variables:
+- `MONGO_URI`: Your MongoDB connection string.
+- `JWT_SECRET`: A secure key for token generation.
+- `PORT`: Server port (default: 8080).
+
+## 📄 License
+This project is for educational purposes. All data is simulated for the 2025/26 season.
