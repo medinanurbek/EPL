@@ -42,6 +42,8 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/matches/upcoming", footballHandler.GetUpcomingFixtures)
 	api.GET("/stats", footballHandler.GetStats)
 	api.GET("/matches/:id/events", footballHandler.GetMatchEvents)
+	api.GET("/matches/:id/live-events", footballHandler.GetMatchEventsByID)
+	api.GET("/matches/matchday/:day", footballHandler.GetMatchesByMatchday)
 
 	// Protected Routes (User)
 	userGroup := api.Group("/user")
@@ -56,8 +58,22 @@ func SetupRoutes(r *gin.Engine) {
 	admin := api.Group("/")
 	admin.Use(middleware.AdminMiddleware())
 	{
+		// Match management
 		admin.POST("/matches", footballHandler.CreateMatch)
 		admin.PATCH("/matches/:id/status", footballHandler.UpdateMatchStatus)
+		admin.PATCH("/matches/:id/start", footballHandler.StartMatch)
+		admin.PATCH("/matches/:id/finish", footballHandler.FinishMatch)
+
+		// Event management (error correction)
+		admin.PUT("/matches/:id/events/:eventId", footballHandler.EditGoalEvent)
+		admin.DELETE("/matches/:id/events/:eventId", footballHandler.DeleteGoalEvent)
+
+		// Player management
+		admin.POST("/players", footballHandler.CreatePlayer)
+		admin.PUT("/players/:id", footballHandler.UpdatePlayer)
+		admin.DELETE("/players/:id", footballHandler.DeletePlayer)
+
+		// Review management
 		admin.DELETE("/reviews/:id", handlers.NewReviewHandler().DeleteReview)
 	}
 

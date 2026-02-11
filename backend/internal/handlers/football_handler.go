@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/services"
@@ -22,12 +23,23 @@ func NewFootballHandler() *FootballHandler {
 }
 
 func (h *FootballHandler) GetMatches(c *gin.Context) {
+	fmt.Println("=== DEBUG GET MATCHES EXECUTED ===")
 	matches, err := h.service.GetAllMatches()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, matches)
+
+	activeMatchday, err := h.service.GetActiveMatchday()
+	if err != nil {
+		// Log error but don't fail, default to 0
+		fmt.Printf("Error getting active matchday: %v\n", err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"matches":        matches,
+		"activeMatchday": activeMatchday,
+	})
 }
 
 func (h *FootballHandler) GetStandings(c *gin.Context) {
@@ -159,50 +171,21 @@ type MatchJSON struct {
 }
 
 func (h *FootballHandler) GetLatestResults(c *gin.Context) {
-	matches, err := readMatchesFromFile("../results.json")
+	matches, err := h.service.GetLatestResults()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read results"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch latest results"})
 		return
 	}
-
-	// Get last 2 matches
-	count := len(matches)
-	if count == 0 {
-		c.JSON(http.StatusOK, []MatchJSON{})
-		return
-	}
-
-	var latest []MatchJSON
-	if count >= 2 {
-		latest = matches[count-2:]
-	} else {
-		latest = matches
-	}
-
-	// Reverse to show most recent first
-	for i, j := 0, len(latest)-1; i < j; i, j = i+1, j-1 {
-		latest[i], latest[j] = latest[j], latest[i]
-	}
-
-	c.JSON(http.StatusOK, latest)
+	c.JSON(http.StatusOK, matches)
 }
 
 func (h *FootballHandler) GetUpcomingFixtures(c *gin.Context) {
-	matches, err := readMatchesFromFile("../next_matches.json")
+	matches, err := h.service.GetUpcomingFixtures()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read fixtures"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch upcoming fixtures"})
 		return
 	}
-
-	// Get first 3 matches
-	var upcoming []MatchJSON
-	if len(matches) >= 3 {
-		upcoming = matches[:3]
-	} else {
-		upcoming = matches
-	}
-
-	c.JSON(http.StatusOK, upcoming)
+	c.JSON(http.StatusOK, matches)
 }
 
 func readMatchesFromFile(filename string) ([]MatchJSON, error) {
@@ -243,4 +226,122 @@ func (h *FootballHandler) GetMatchEvents(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, events)
+}
+
+// --- Match Lifecycle ---
+
+func (h *FootballHandler) StartMatch(c *gin.Context) {
+	id := c.Param("id")
+	if err := h.service.StartMatch(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Match started, simulation running"})
+}
+
+func (h *FootballHandler) FinishMatch(c *gin.Context) {
+	id := c.Param("id")
+	if err := h.service.FinishMatch(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Match finished, standings updated"})
+}
+
+// --- Event Management ---
+
+func (h *FootballHandler) GetMatchEventsByID(c *gin.Context) {
+	matchID := c.Param("id")
+	events, err := h.service.GetGoalEventsByMatchID(matchID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, events)
+}
+
+func (h *FootballHandler) EditGoalEvent(c *gin.Context) {
+	matchID := c.Param("id")
+	eventID := c.Param("eventId")
+
+	var update map[string]interface{}
+	if err := c.ShouldBindJSON(&update); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.service.EditGoalEvent(matchID, eventID, update); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Event updated, score recalculated"})
+}
+
+func (h *FootballHandler) DeleteGoalEvent(c *gin.Context) {
+	matchID := c.Param("id")
+	eventID := c.Param("eventId")
+
+	if err := h.service.DeleteGoalEvent(matchID, eventID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Event deleted, score recalculated"})
+}
+
+// --- Matchday ---
+
+func (h *FootballHandler) GetMatchesByMatchday(c *gin.Context) {
+	dayStr := c.Param("day")
+	var day int
+	if _, err := fmt.Sscanf(dayStr, "%d", &day); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid matchday"})
+		return
+	}
+	matches, err := h.service.GetMatchesByMatchday(day)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, matches)
+}
+
+// --- Player CRUD ---
+
+func (h *FootballHandler) CreatePlayer(c *gin.Context) {
+	var player models.Player
+	if err := c.ShouldBindJSON(&player); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if player.ID == "" {
+		player.ID = fmt.Sprintf("p_%d", time.Now().UnixNano())
+	}
+	if err := h.service.CreatePlayer(&player); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, player)
+}
+
+func (h *FootballHandler) UpdatePlayer(c *gin.Context) {
+	playerID := c.Param("id")
+	var update map[string]interface{}
+	if err := c.ShouldBindJSON(&update); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := h.service.UpdatePlayer(playerID, update); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Player updated"})
+}
+
+func (h *FootballHandler) DeletePlayer(c *gin.Context) {
+	playerID := c.Param("id")
+	if err := h.service.DeletePlayer(playerID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Player deleted"})
 }

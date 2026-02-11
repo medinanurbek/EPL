@@ -465,3 +465,162 @@ func (r *MatchRepository) GetMatchGoalEvents(matchIndex int) ([]models.GoalEvent
 	}
 	return events, nil
 }
+
+// GetGoalEventsByMatchID returns all goal events for a match by matchId
+func (r *MatchRepository) GetGoalEventsByMatchID(matchID string) ([]models.GoalEvent, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("goal_events")
+	opts := options.Find().SetSort(bson.D{{Key: "minute", Value: 1}})
+	cursor, err := coll.Find(ctx, bson.M{"matchId": matchID}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var events []models.GoalEvent
+	if err := cursor.All(ctx, &events); err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+// EditGoalEvent updates a goal event
+func (r *MatchRepository) EditGoalEvent(eventID string, update bson.M) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("goal_events")
+	_, err := coll.UpdateOne(ctx, bson.M{"_id": eventID}, bson.M{"$set": update})
+	return err
+}
+
+// DeleteGoalEvent removes a goal event
+func (r *MatchRepository) DeleteGoalEvent(eventID string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("goal_events")
+	_, err := coll.DeleteOne(ctx, bson.M{"_id": eventID})
+	return err
+}
+
+// GetMatchesByMatchday returns all matches for a given matchday
+func (r *MatchRepository) GetMatchesByMatchday(matchday int) ([]models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().SetSort(bson.D{{Key: "date", Value: 1}})
+	cursor, err := r.collection.Find(ctx, bson.M{"matchday": matchday}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var matches []models.Match
+	if err := cursor.All(ctx, &matches); err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
+
+// UpdateMatchScore updates only the score fields
+func (r *MatchRepository) UpdateMatchScore(matchID string, homeScore, awayScore int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := r.collection.UpdateOne(ctx,
+		bson.M{"_id": matchID},
+		bson.M{"$set": bson.M{"homeScore": homeScore, "awayScore": awayScore}},
+	)
+	return err
+}
+
+// UpdateMatchStatus updates the match status
+func (r *MatchRepository) UpdateMatchStatus(matchID string, status models.MatchStatus) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := r.collection.UpdateOne(ctx,
+		bson.M{"_id": matchID},
+		bson.M{"$set": bson.M{"status": status}},
+	)
+	return err
+}
+
+// --- Player CRUD ---
+
+// CreatePlayer inserts a new player
+func (r *MatchRepository) CreatePlayer(player *models.Player) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
+	_, err := coll.InsertOne(ctx, player)
+	return err
+}
+
+// UpdatePlayer updates a player's fields
+func (r *MatchRepository) UpdatePlayer(playerID string, update bson.M) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
+	_, err := coll.UpdateOne(ctx, bson.M{"_id": playerID}, bson.M{"$set": update})
+	return err
+}
+
+// DeletePlayer removes a player
+func (r *MatchRepository) DeletePlayer(playerID string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
+	_, err := coll.DeleteOne(ctx, bson.M{"_id": playerID})
+	return err
+}
+
+// GetLatestResultMatches returns the last 'limit' matches with status FINISHED, sorted by date desc
+func (r *MatchRepository) GetLatestResultMatches(limit int) ([]models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().
+		SetSort(bson.D{{Key: "date", Value: -1}}). // Latest first
+		SetLimit(int64(limit))
+
+	cursor, err := r.collection.Find(ctx, bson.M{"status": "FINISHED"}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var matches []models.Match
+	if err := cursor.All(ctx, &matches); err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
+
+// GetUpcomingMatches returns the next 'limit' matches with status SCHEDULED, sorted by date asc
+func (r *MatchRepository) GetUpcomingMatches(limit int) ([]models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().
+		SetSort(bson.D{{Key: "date", Value: 1}}). // Earliest first
+		SetLimit(int64(limit))
+
+	cursor, err := r.collection.Find(ctx, bson.M{"status": "SCHEDULED"}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var matches []models.Match
+	if err := cursor.All(ctx, &matches); err != nil {
+		return nil, err
+	}
+	return matches, nil
+}

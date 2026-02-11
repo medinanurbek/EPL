@@ -53,6 +53,7 @@ type Match struct {
 	HomeScore  int          `bson:"homeScore" json:"homeScore"`
 	AwayScore  int          `bson:"awayScore" json:"awayScore"`
 	Date       time.Time    `bson:"date" json:"date"`
+	Matchday   int          `bson:"matchday" json:"matchday"`
 	Status     MatchStatus  `bson:"status" json:"status"`
 	SeasonID   string       `bson:"seasonId" json:"seasonId"`
 	Events     []MatchEvent `bson:"events,omitempty" json:"events,omitempty"`
@@ -77,6 +78,7 @@ type MatchEvent struct {
 
 type GoalEvent struct {
 	ID         string `bson:"_id" json:"id"`
+	MatchID    string `bson:"matchId" json:"matchId"`
 	MatchIndex int    `bson:"matchIndex" json:"matchIndex"`
 	Matchday   int    `bson:"matchday" json:"matchday"`
 	HomeTeam   string `bson:"homeTeam" json:"homeTeam"`

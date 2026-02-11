@@ -113,6 +113,56 @@ export const apiService = {
     async updateMatchStatus(matchId: string, status: string): Promise<void> {
         await api.patch(`/matches/${matchId}/status`, { status });
     },
+
+    // Match Lifecycle
+    async startMatch(matchId: string): Promise<void> {
+        await api.patch(`/matches/${matchId}/start`);
+    },
+
+    async finishMatch(matchId: string): Promise<void> {
+        await api.patch(`/matches/${matchId}/finish`);
+    },
+
+    // Live Events
+    async getMatchLiveEvents(matchId: string): Promise<any[]> {
+        const response = await api.get<any[]>(`/matches/${matchId}/live-events`);
+        return response.data;
+    },
+
+    // Matchday
+    async getMatchesByMatchday(day: number): Promise<any[]> {
+        const response = await api.get<any[]>(`/matches/matchday/${day}`);
+        return response.data;
+    },
+
+    // All matches (returns { matches: [], activeMatchday: number })
+    async getMatches(): Promise<{ matches: any[], activeMatchday: number }> {
+        const response = await api.get<{ matches: any[], activeMatchday: number }>('/matches');
+        return response.data;
+    },
+
+    // Event Management (Admin)
+    async editGoalEvent(matchId: string, eventId: string, data: any): Promise<void> {
+        await api.put(`/matches/${matchId}/events/${eventId}`, data);
+    },
+
+    async deleteGoalEvent(matchId: string, eventId: string): Promise<void> {
+        await api.delete(`/matches/${matchId}/events/${eventId}`);
+    },
+
+    // Player CRUD (Admin)
+    async createPlayer(data: any): Promise<any> {
+        const response = await api.post('/players', data);
+        return response.data;
+    },
+
+    async updatePlayer(playerId: string, data: any): Promise<void> {
+        await api.put(`/players/${playerId}`, data);
+    },
+
+    async deletePlayer(playerId: string): Promise<void> {
+        await api.delete(`/players/${playerId}`);
+    },
 };
 
 export default api;

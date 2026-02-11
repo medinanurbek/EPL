@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/repositories"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type FootballService struct {
@@ -304,4 +306,260 @@ func (s *FootballService) GetTeamMatches(teamID string) (*TeamMatchesResponse, e
 	}
 
 	return response, nil
+}
+
+// --- Match Lifecycle ---
+
+// StartMatch transitions a match from SCHEDULED to LIVE and starts the simulation
+func (s *FootballService) StartMatch(matchID string) error {
+	match, err := s.matchRepo.GetMatchByID(matchID)
+	if err != nil {
+		return err
+	}
+	if match.Status != models.MatchScheduled {
+		return fmt.Errorf("match is not in SCHEDULED state (current: %s)", match.Status)
+	}
+
+	// Enforce sequential matchdays
+	activeMatchday, err := s.GetActiveMatchday()
+	if err != nil {
+		return err
+	}
+	if match.Matchday != activeMatchday {
+		return fmt.Errorf("can only start matches for current Matchday %d (this match is Matchday %d)", activeMatchday, match.Matchday)
+	}
+
+	// Update status to LIVE
+	if err := s.matchRepo.UpdateMatchStatus(matchID, models.MatchLive); err != nil {
+		return err
+	}
+
+	// Start background simulation
+	SimulateMatch(matchID)
+
+	return nil
+}
+
+// GetActiveMatchday returns the first matchday that has SCHEDULED or LIVE matches.
+// If all are finished, returns the last matchday + 1 (or just max matchday).
+func (s *FootballService) GetActiveMatchday() (int, error) {
+	matches, err := s.matchRepo.GetAllMatches()
+	if err != nil {
+		return 0, err
+	}
+
+	// Find min matchday that is not all FINISHED
+	// Actually simpler: Find first matchday where status != FINISHED
+	// Matches are not guaranteed sorted by matchday in DB return, so let's check properly.
+
+	// Group by matchday
+	statusByDay := make(map[int][]models.MatchStatus)
+	minDay := 100
+	maxDay := 0
+
+	for _, m := range matches {
+		statusByDay[m.Matchday] = append(statusByDay[m.Matchday], m.Status)
+		if m.Matchday < minDay {
+			minDay = m.Matchday
+		}
+		if m.Matchday > maxDay {
+			maxDay = m.Matchday
+		}
+	}
+
+	if len(matches) == 0 {
+		return 1, nil
+	}
+
+	// Check from minDay upwards
+	for day := minDay; day <= maxDay; day++ {
+		statuses, exists := statusByDay[day]
+		if !exists {
+			continue
+		}
+
+		allFinished := true
+		for _, st := range statuses {
+			if st != models.MatchFinished {
+				allFinished = false
+				break
+			}
+		}
+
+		if !allFinished {
+			return day, nil
+		}
+	}
+
+	return maxDay, nil // All finished
+}
+
+// FinishMatch transitions a match from LIVE to FINISHED and recalculates stats
+func (s *FootballService) FinishMatch(matchID string) error {
+	match, err := s.matchRepo.GetMatchByID(matchID)
+	if err != nil {
+		return err
+	}
+	if match.Status != models.MatchLive {
+		return fmt.Errorf("match is not in LIVE state (current: %s)", match.Status)
+	}
+
+	// Stop simulation if running
+	StopSimulation(matchID)
+
+	// Recalculate score from events
+	homeScore, awayScore, err := RecalculateMatchScore(context.Background(), matchID)
+	if err != nil {
+		return err
+	}
+
+	// Update match status to FINISHED
+	if err := s.matchRepo.UpdateMatchStatus(matchID, models.MatchFinished); err != nil {
+		return err
+	}
+
+	// Update standings
+	match.Status = models.MatchFinished
+	match.HomeScore = homeScore
+	match.AwayScore = awayScore
+	if err := UpdateStandings(context.Background(), match); err != nil {
+		log.Printf("Error updating standings: %v", err)
+	}
+
+	log.Printf("[FinishMatch] Match %s finished: %d-%d. Standings updated.", matchID, homeScore, awayScore)
+	return nil
+}
+
+// --- Event Management ---
+
+// GetGoalEventsByMatchID returns goal events for a specific match
+func (s *FootballService) GetGoalEventsByMatchID(matchID string) ([]models.GoalEvent, error) {
+	return s.matchRepo.GetGoalEventsByMatchID(matchID)
+}
+
+// EditGoalEvent updates a goal event and recalculates match score + standings
+func (s *FootballService) EditGoalEvent(matchID string, eventID string, update map[string]interface{}) error {
+	bsonUpdate := bson.M{}
+	for k, v := range update {
+		bsonUpdate[k] = v
+	}
+	if err := s.matchRepo.EditGoalEvent(eventID, bsonUpdate); err != nil {
+		return err
+	}
+
+	// Recalculate score and standings
+	return s.recalculateAfterEventChange(matchID)
+}
+
+// DeleteGoalEvent removes a goal event and recalculates match score + standings
+func (s *FootballService) DeleteGoalEvent(matchID string, eventID string) error {
+	if err := s.matchRepo.DeleteGoalEvent(eventID); err != nil {
+		return err
+	}
+
+	// Recalculate score and standings
+	return s.recalculateAfterEventChange(matchID)
+}
+
+// recalculateAfterEventChange recalculates match score and all standings
+func (s *FootballService) recalculateAfterEventChange(matchID string) error {
+	ctx := context.Background()
+
+	// Recalculate score
+	_, _, err := RecalculateMatchScore(ctx, matchID)
+	if err != nil {
+		return err
+	}
+
+	// Recalculate all standings from scratch
+	return RecalculateAllStandings(ctx)
+}
+
+// --- Matchday ---
+
+// GetMatchesByMatchday returns all matches for a given matchday
+func (s *FootballService) GetMatchesByMatchday(matchday int) ([]models.Match, error) {
+	return s.matchRepo.GetMatchesByMatchday(matchday)
+}
+
+// --- Player CRUD ---
+
+// CreatePlayer creates a new player
+func (s *FootballService) CreatePlayer(player *models.Player) error {
+	return s.matchRepo.CreatePlayer(player)
+}
+
+// UpdatePlayer updates a player
+func (s *FootballService) UpdatePlayer(playerID string, update map[string]interface{}) error {
+	bsonUpdate := bson.M{}
+	for k, v := range update {
+		bsonUpdate[k] = v
+	}
+	return s.matchRepo.UpdatePlayer(playerID, bsonUpdate)
+}
+
+// DeletePlayer deletes a player
+func (s *FootballService) DeletePlayer(playerID string) error {
+	return s.matchRepo.DeletePlayer(playerID)
+}
+
+// GetLatestResults fetches finished matches from DB and formats them for frontend
+func (s *FootballService) GetLatestResults() ([]MatchJSON, error) {
+	// Get last 10 finished matches
+	matches, err := s.matchRepo.GetLatestResultMatches(10)
+	if err != nil {
+		return nil, err
+	}
+
+	teams, err := s.teamRepo.GetAllTeams()
+	if err != nil {
+		return nil, err
+	}
+	teamMap := make(map[string]string)
+	for _, t := range teams {
+		teamMap[t.ID] = t.Name
+	}
+
+	var results []MatchJSON
+	for _, m := range matches {
+		results = append(results, MatchJSON{
+			Matchday:  m.Matchday,
+			Date:      m.Date.Format(time.RFC3339),
+			Time:      m.Date.Format("15:04"),
+			HomeTeam:  teamMap[m.HomeTeamID],
+			AwayTeam:  teamMap[m.AwayTeamID],
+			HomeScore: m.HomeScore,
+			AwayScore: m.AwayScore,
+		})
+	}
+	return results, nil
+}
+
+// GetUpcomingFixtures fetches scheduled matches from DB
+func (s *FootballService) GetUpcomingFixtures() ([]MatchJSON, error) {
+	matches, err := s.matchRepo.GetUpcomingMatches(10)
+	if err != nil {
+		return nil, err
+	}
+
+	teams, err := s.teamRepo.GetAllTeams()
+	if err != nil {
+		return nil, err
+	}
+	teamMap := make(map[string]string)
+	for _, t := range teams {
+		teamMap[t.ID] = t.Name
+	}
+
+	var upcoming []MatchJSON
+	for _, m := range matches {
+		upcoming = append(upcoming, MatchJSON{
+			Matchday: m.Matchday,
+			Date:     m.Date.Format(time.RFC3339),
+			Time:     m.Date.Format("15:04"),
+			HomeTeam: teamMap[m.HomeTeamID],
+			AwayTeam: teamMap[m.AwayTeamID],
+		})
+	}
+	return upcoming, nil
 }

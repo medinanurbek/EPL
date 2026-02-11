@@ -76,6 +76,23 @@ export interface MatchEvent {
     minute: number;
 }
 
+export interface GoalEvent {
+    id: string;
+    matchId: string;
+    matchIndex: number;
+    matchday: number;
+    homeTeam: string;
+    awayTeam: string;
+    scorerId: string;
+    scorerName: string;
+    assistId?: string;
+    assistName?: string;
+    teamName: string;
+    teamId: string;
+    minute: number;
+    isHomeGoal: boolean;
+}
+
 export interface User {
     id: string;
     username: string;
