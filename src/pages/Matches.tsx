@@ -20,6 +20,7 @@ type ExtendedMatch = Match & {
     homeTeam: Team;
     awayTeam: Team;
     matchday: number;
+    matchIndex: number;
 };
 
 export default function MatchesPage() {
@@ -55,6 +56,7 @@ export default function MatchesPage() {
                         status: (activeTab === "fixtures" ? "SCHEDULED" : "FINISHED") as MatchStatus,
                         seasonId: "2025-26",
                         matchday: item.matchday,
+                        matchIndex: index,
                         homeTeam: {
                             id: item.homeTeam,
                             name: item.homeTeam,
@@ -275,7 +277,7 @@ export default function MatchesPage() {
                                         exit={{ opacity: 0, y: -20 }}
                                         transition={{ delay: idx * 0.05, duration: 0.4, ease: "easeOut" }}
                                     >
-                                        <MatchCard match={match} />
+                                        <MatchCard match={match} matchIndex={activeTab === "results" ? match.matchIndex : undefined} />
                                     </motion.div>
                                 ))}
                             </AnimatePresence>

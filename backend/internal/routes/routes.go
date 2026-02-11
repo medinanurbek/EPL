@@ -40,6 +40,8 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/matches/next-json", footballHandler.GetNextMatchesJSON)
 	api.GET("/matches/latest", footballHandler.GetLatestResults)
 	api.GET("/matches/upcoming", footballHandler.GetUpcomingFixtures)
+	api.GET("/stats", footballHandler.GetStats)
+	api.GET("/matches/:id/events", footballHandler.GetMatchEvents)
 
 	// Protected Routes (User)
 	userGroup := api.Group("/user")

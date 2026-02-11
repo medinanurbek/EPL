@@ -75,6 +75,22 @@ type MatchEvent struct {
 	Minute   int       `bson:"minute" json:"minute"`
 }
 
+type GoalEvent struct {
+	ID         string `bson:"_id" json:"id"`
+	MatchIndex int    `bson:"matchIndex" json:"matchIndex"`
+	Matchday   int    `bson:"matchday" json:"matchday"`
+	HomeTeam   string `bson:"homeTeam" json:"homeTeam"`
+	AwayTeam   string `bson:"awayTeam" json:"awayTeam"`
+	ScorerID   string `bson:"scorerId" json:"scorerId"`
+	ScorerName string `bson:"scorerName" json:"scorerName"`
+	AssistID   string `bson:"assistId,omitempty" json:"assistId,omitempty"`
+	AssistName string `bson:"assistName,omitempty" json:"assistName,omitempty"`
+	TeamName   string `bson:"teamName" json:"teamName"`
+	TeamID     string `bson:"teamId" json:"teamId"`
+	Minute     int    `bson:"minute" json:"minute"`
+	IsHomeGoal bool   `bson:"isHomeGoal" json:"isHomeGoal"`
+}
+
 type Season struct {
 	ID       string `bson:"_id" json:"id"`
 	Year     string `bson:"year" json:"year"`

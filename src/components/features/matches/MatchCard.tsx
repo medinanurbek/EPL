@@ -1,16 +1,54 @@
 import { Match, Team } from "@/types";
 import { format } from "date-fns";
-import { Calendar, MapPin, ChevronRight } from "lucide-react";
-
+import { Calendar, MapPin, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { getTeamLogo } from "@/lib/utils";
+
+interface GoalEvent {
+    id: string;
+    matchIndex: number;
+    scorerName: string;
+    assistName?: string;
+    teamName: string;
+    minute: number;
+    isHomeGoal: boolean;
+}
 
 interface MatchCardProps {
     match: Match & { homeTeam: Team; awayTeam: Team };
+    matchIndex?: number;
 }
 
-export function MatchCard({ match }: MatchCardProps) {
+export function MatchCard({ match, matchIndex }: MatchCardProps) {
     const isFinished = match.status === "FINISHED";
     const isLive = match.status === "LIVE";
+    const [expanded, setExpanded] = useState(false);
+    const [events, setEvents] = useState<GoalEvent[]>([]);
+    const [loadingEvents, setLoadingEvents] = useState(false);
+
+    const handleExpand = async () => {
+        if (!isFinished || matchIndex === undefined) return;
+
+        if (expanded) {
+            setExpanded(false);
+            return;
+        }
+
+        if (events.length === 0) {
+            setLoadingEvents(true);
+            try {
+                const res = await fetch(`http://localhost:8080/api/matches/${matchIndex}/events`);
+                const data = await res.json();
+                setEvents(data || []);
+            } catch (err) {
+                console.error("Failed to fetch events:", err);
+            } finally {
+                setLoadingEvents(false);
+            }
+        }
+        setExpanded(true);
+    };
 
     return (
         <div className="glass-card overflow-hidden group hover:border-[#00ff85]/50 transition-all bg-white/[0.03] backdrop-blur-3xl relative border border-white/10 shadow-2xl rounded-[24px]">
@@ -75,13 +113,71 @@ export function MatchCard({ match }: MatchCardProps) {
                 </div>
             </div>
 
-            <div className="px-8 py-6 border-t border-white/5 flex items-center justify-between bg-white/[0.02] relative z-10 group/footer cursor-pointer">
-                <div className="flex items-center gap-3 text-[10px] font-outfit font-black text-white/40 uppercase tracking-[0.3em]">
-                    <MapPin className="w-4 h-4 text-[#00ff85] opacity-50" />
-                    {match.homeTeam.stadium}
+            {/* Expandable Goal Events */}
+            {isFinished && matchIndex !== undefined && (
+                <div
+                    className="px-8 py-4 border-t border-white/5 flex items-center justify-between bg-white/[0.02] relative z-10 cursor-pointer hover:bg-white/[0.05] transition-colors"
+                    onClick={handleExpand}
+                >
+                    <div className="flex items-center gap-3 text-[10px] font-outfit font-black text-white/40 uppercase tracking-[0.3em]">
+                        <span>⚽</span>
+                        {(match.homeScore + match.awayScore) > 0 ? `${match.homeScore + match.awayScore} Goals` : 'No Goals'}
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-[#00ff85] transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#00ff85] transition-transform group-hover/footer:translate-x-2" />
-            </div>
+            )}
+
+            <AnimatePresence>
+                {expanded && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden border-t border-white/5"
+                    >
+                        <div className="px-8 py-4 space-y-2">
+                            {loadingEvents ? (
+                                <div className="text-center py-4">
+                                    <div className="w-5 h-5 border-2 border-[#00ff85] border-t-transparent rounded-full animate-spin mx-auto" />
+                                </div>
+                            ) : events.length > 0 ? (
+                                events.map((event) => (
+                                    <div key={event.id} className={`flex items-center gap-3 py-2 px-3 rounded-xl ${event.isHomeGoal ? 'bg-white/[0.03]' : 'bg-white/[0.03]'}`}>
+                                        <span className="text-[#00ff85] font-outfit font-black text-xs min-w-[28px]">{event.minute}'</span>
+                                        <span className="text-white/30">⚽</span>
+                                        <div className="flex-1">
+                                            <span className="text-white font-outfit font-bold text-xs uppercase">{event.scorerName}</span>
+                                            {event.assistName && (
+                                                <span className="text-white/40 font-outfit text-[10px] ml-2">
+                                                    (assist: <span className="text-white/60">{event.assistName}</span>)
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="w-4 h-4 opacity-40">
+                                            <img src={getTeamLogo(event.teamName)} alt="" className="w-full h-full object-contain" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-4 text-white/30 font-outfit font-bold text-xs uppercase tracking-wider">
+                                    No goal events recorded
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Stadium footer - only for non-expanded or non-finished */}
+            {(!isFinished || matchIndex === undefined) && (
+                <div className="px-8 py-6 border-t border-white/5 flex items-center justify-between bg-white/[0.02] relative z-10 group/footer cursor-pointer">
+                    <div className="flex items-center gap-3 text-[10px] font-outfit font-black text-white/40 uppercase tracking-[0.3em]">
+                        <MapPin className="w-4 h-4 text-[#00ff85] opacity-50" />
+                        {match.homeTeam.stadium}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

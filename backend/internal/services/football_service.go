@@ -162,6 +162,36 @@ func (s *FootballService) GetPlayerByID(playerID string) (*models.Player, error)
 	return s.matchRepo.GetPlayerByID(playerID)
 }
 
+type StatsResponse struct {
+	TopScorers  []repositories.StatEntry `json:"topScorers"`
+	TopAssists  []repositories.StatEntry `json:"topAssists"`
+	CleanSheets []repositories.StatEntry `json:"cleanSheets"`
+}
+
+func (s *FootballService) GetStats() (*StatsResponse, error) {
+	topScorers, err := s.matchRepo.GetTopScorers(10)
+	if err != nil {
+		return nil, err
+	}
+	topAssists, err := s.matchRepo.GetTopAssists(10)
+	if err != nil {
+		return nil, err
+	}
+	cleanSheets, err := s.matchRepo.GetCleanSheets(10)
+	if err != nil {
+		return nil, err
+	}
+	return &StatsResponse{
+		TopScorers:  topScorers,
+		TopAssists:  topAssists,
+		CleanSheets: cleanSheets,
+	}, nil
+}
+
+func (s *FootballService) GetMatchGoalEvents(matchIndex int) ([]models.GoalEvent, error) {
+	return s.matchRepo.GetMatchGoalEvents(matchIndex)
+}
+
 type TeamMatchesResponse struct {
 	Team          models.Team `json:"team"`
 	RecentMatches []MatchJSON `json:"recentMatches"` // Last 5 results

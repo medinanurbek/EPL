@@ -2,11 +2,18 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Trophy, Calendar, Users, ArrowRight, Rocket, Zap, User, TrendingUp } from "lucide-react";
-import { topScorers, topAssistants } from "@/lib/match-data";
 import { getTeamLogo } from "@/lib/utils";
 import { MatchCard } from "@/components/features/matches/MatchCard";
 import { useState, useEffect } from "react";
 import { Standing, Match, Team } from "@/types";
+
+interface StatEntry {
+    playerId: string;
+    name: string;
+    teamName: string;
+    value: number;
+    imagePath: string;
+}
 
 interface BackendMatch {
     matchday: number;
@@ -34,6 +41,8 @@ export default function HomeLanding() {
     const [latestMatches, setLatestMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
     const [upcomingMatches, setUpcomingMatches] = useState<(Match & { homeTeam: Team; awayTeam: Team })[]>([]);
     const [currentMatchweek, setCurrentMatchweek] = useState<number>(12);
+    const [topScorers, setTopScorers] = useState<StatEntry[]>([]);
+    const [topAssistants, setTopAssistants] = useState<StatEntry[]>([]);
 
     useEffect(() => {
         // Fetch Standings
@@ -94,6 +103,15 @@ export default function HomeLanding() {
                         setCurrentMatchweek(transformed[0].matchday);
                     }
                 }
+            })
+            .catch(err => console.error(err));
+
+        // Fetch Stats for widgets
+        fetch("http://localhost:8080/api/stats")
+            .then(res => res.json())
+            .then(data => {
+                if (data.topScorers) setTopScorers(data.topScorers.slice(0, 3));
+                if (data.topAssists) setTopAssistants(data.topAssists.slice(0, 3));
             })
             .catch(err => console.error(err));
     }, []);
@@ -224,16 +242,20 @@ export default function HomeLanding() {
                                 </h3>
                                 <div className="relative z-10">
                                     <div className="flex items-end gap-6 mb-8">
-                                        <div className="text-6xl font-outfit font-black text-[#00ff85] italic leading-none">{topScorers[0].goals}</div>
+                                        <div className="text-6xl font-outfit font-black text-[#00ff85] italic leading-none">{topScorers[0]?.value || 0}</div>
                                         <div className="text-white/40 font-outfit font-black text-xs uppercase tracking-widest pb-1">Goals</div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-white/50 border border-white/5">
-                                            <User className="w-6 h-6" />
+                                        <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+                                            {topScorers[0]?.imagePath ? (
+                                                <img src={topScorers[0].imagePath} alt={topScorers[0].name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <User className="w-6 h-6 text-white/50" />
+                                            )}
                                         </div>
                                         <div>
-                                            <p className="text-xl font-outfit font-black text-white uppercase tracking-tight">{topScorers[0].name}</p>
-                                            <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{topScorers[0].team}</p>
+                                            <p className="text-xl font-outfit font-black text-white uppercase tracking-tight">{topScorers[0]?.name || 'Loading...'}</p>
+                                            <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{topScorers[0]?.teamName || ''}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -247,15 +269,22 @@ export default function HomeLanding() {
                                 </h3>
                                 <div className="space-y-6">
                                     {topAssistants.map((player, i) => (
-                                        <div key={i} className="flex items-center justify-between border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                                            <div className="flex items-center gap-3">
+                                        <div key={player.playerId || i} className="flex items-center justify-between group/item border-b border-white/5 pb-4 last:border-0 last:pb-0">
+                                            <div className="flex items-center gap-4">
                                                 <span className="text-lg font-outfit font-black text-white/20">0{i + 1}</span>
+                                                <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+                                                    {player.imagePath ? (
+                                                        <img src={player.imagePath} alt={player.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <User className="w-4 h-4 text-white/50" />
+                                                    )}
+                                                </div>
                                                 <div>
                                                     <p className="text-sm font-outfit font-black text-white uppercase">{player.name}</p>
-                                                    <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{player.team}</p>
+                                                    <p className="text-[10px] font-outfit font-black text-[#00ff85] uppercase tracking-widest">{player.teamName}</p>
                                                 </div>
                                             </div>
-                                            <div className="text-2xl font-outfit font-black text-white italic">{player.assists}</div>
+                                            <div className="text-2xl font-outfit font-black text-white italic">{player.value}</div>
                                         </div>
                                     ))}
                                 </div>
