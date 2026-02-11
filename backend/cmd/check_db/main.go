@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/config"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
@@ -14,10 +18,18 @@ func main() {
 	cfg := config.LoadConfig()
 	database.ConnectDB(cfg)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// Check Teams
 	var teams []models.Team
-	if err := database.DB.Find(&teams).Error; err != nil {
+	teamColl := database.DB.Collection("teams")
+	cursor, err := teamColl.Find(ctx, bson.M{})
+	if err != nil {
 		log.Fatalf("Failed to fetch teams: %v", err)
+	}
+	if err := cursor.All(ctx, &teams); err != nil {
+		log.Fatalf("Failed to decode teams: %v", err)
 	}
 
 	fmt.Printf("\n=== TEAMS (Total: %d) ===\n", len(teams))
@@ -29,8 +41,14 @@ func main() {
 
 	// Check Standings
 	var standings []models.Standing
-	if err := database.DB.Preload("Team").Order("points DESC").Find(&standings).Error; err != nil {
+	standingColl := database.DB.Collection("standings")
+	opts := options.Find().SetSort(bson.M{"points": -1})
+	cursor, err = standingColl.Find(ctx, bson.M{}, opts)
+	if err != nil {
 		log.Fatalf("Failed to fetch standings: %v", err)
+	}
+	if err := cursor.All(ctx, &standings); err != nil {
+		log.Fatalf("Failed to decode standings: %v", err)
 	}
 
 	fmt.Printf("\n=== STANDINGS (Total: %d) ===\n", len(standings))
@@ -48,22 +66,21 @@ func main() {
 	}
 
 	// Check other tables
-	var users []models.User
-	database.DB.Find(&users)
+	utils := []struct {
+		Name string
+		Coll string
+	}{
+		{"Users", "users"},
+		{"Players", "players"},
+		{"Matches", "matches"},
+		{"Seasons", "seasons"},
+	}
+
 	fmt.Printf("\n=== OTHER TABLES ===\n")
-	fmt.Printf("Users: %d\n", len(users))
-
-	var players []models.Player
-	database.DB.Find(&players)
-	fmt.Printf("Players: %d\n", len(players))
-
-	var matches []models.Match
-	database.DB.Find(&matches)
-	fmt.Printf("Matches: %d\n", len(matches))
-
-	var seasons []models.Season
-	database.DB.Find(&seasons)
-	fmt.Printf("Seasons: %d\n", len(seasons))
+	for _, u := range utils {
+		count, _ := database.DB.Collection(u.Coll).CountDocuments(ctx, bson.M{})
+		fmt.Printf("%s: %d\n", u.Name, count)
+	}
 
 	fmt.Println("\n✅ Database check completed!")
 }

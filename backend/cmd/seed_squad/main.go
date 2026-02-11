@@ -1,18 +1,20 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+	"time"
 
-	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-
+	"github.com/Sanat-07/English-Premier-League/backend/internal/config"
+	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // SportMonks structures for parsing the JSON
@@ -50,24 +52,12 @@ type SMPosition struct {
 }
 
 func main() {
-	// Load environment variables
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Println("Warning: .env file not found, relying on system env vars")
-	}
+	// 1. Setup DB
+	cfg := config.LoadConfig()
+	database.ConnectDB(cfg)
 
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
-		getEnv("DB_HOST", "localhost"),
-		getEnv("DB_USER", "postgres"),
-		getEnv("DB_PASSWORD", "postgres"),
-		getEnv("DB_NAME", "epl_db"),
-		getEnv("DB_PORT", "5432"),
-	)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	// Read mancitysquad.json
 	jsonFile, err := os.Open("/Users/admin/English-Premier-League/mancitysquad.json")
@@ -95,6 +85,8 @@ func main() {
 	}
 
 	fmt.Printf("Found %d players in parsed file\n", len(squadItems))
+
+	coll := database.DB.Collection("players")
 
 	for _, item := range squadItems {
 		smPlayer := item.Player
@@ -153,7 +145,11 @@ func main() {
 		}
 
 		// Save to DB (Upsert)
-		if err := db.Save(&player).Error; err != nil {
+		filter := bson.M{"_id": player.ID}
+		update := bson.M{"$set": player}
+		opts := options.Update().SetUpsert(true)
+		_, err := coll.UpdateOne(ctx, filter, update, opts)
+		if err != nil {
 			log.Printf("Failed to save player %s: %v", player.Name, err)
 		} else {
 			fmt.Printf("Saved player: %s (#%d)\n", player.Name, player.Number)
@@ -161,11 +157,4 @@ func main() {
 	}
 
 	fmt.Println("Seeding completed successfully!")
-}
-
-func getEnv(key, fallback string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-	return fallback
 }

@@ -5,36 +5,35 @@ import (
 )
 
 type Team struct {
-	ID        string   `gorm:"primaryKey" json:"id"` // external API ID or UUID
-	Name      string   `gorm:"not null" json:"name"`
-	ShortName string   `json:"shortName"`
-	City      string   `json:"city"`
-	Stadium   string   `json:"stadium"`
-	LogoURL   string   `json:"logoUrl"`
-	Players   []Player `gorm:"foreignKey:TeamID" json:"players,omitempty"`
+	ID        string   `bson:"_id" json:"id"`
+	Name      string   `bson:"name" json:"name"`
+	ShortName string   `bson:"shortName" json:"shortName"`
+	City      string   `bson:"city" json:"city"`
+	Stadium   string   `bson:"stadium" json:"stadium"`
+	LogoURL   string   `bson:"logoUrl" json:"logoUrl"`
+	Players   []Player `bson:"players,omitempty" json:"players,omitempty"`
 }
 
 type Player struct {
-	ID               string `gorm:"primaryKey" json:"id"`
-	TeamID           string `gorm:"index" json:"teamId"`
-	Name             string `gorm:"not null" json:"name"`
-	CommonName       string `json:"commonName"`
-	FirstName        string `json:"firstName"`
-	LastName         string `json:"lastName"`
-	DisplayName      string `json:"displayName"`
-	Position         string `json:"position"` // Goalkeeper, Defender, Midfielder, Forward
-	DetailedPosition string `json:"detailedPosition"`
-	Nationality      string `json:"nationality"`
-	NationalityCode  string `json:"nationalityCode"`
-	NationalityISO2  string `json:"nationalityISO2"`
-	Number           int    `json:"number"`
-	Height           int    `json:"height"` // in cm
-	Weight           int    `json:"weight"` // in kg
-	DateOfBirth      string `json:"dateOfBirth"`
-	ImagePath        string `json:"imagePath"`
-	IsCaptain        bool   `json:"isCaptain"`
-	// Statistics stored as JSONB - nullable
-	Statistics *string `gorm:"type:jsonb" json:"statistics,omitempty"`
+	ID               string  `bson:"_id" json:"id"`
+	TeamID           string  `bson:"teamId" json:"teamId"`
+	Name             string  `bson:"name" json:"name"`
+	CommonName       string  `bson:"commonName" json:"commonName"`
+	FirstName        string  `bson:"firstName" json:"firstName"`
+	LastName         string  `bson:"lastName" json:"lastName"`
+	DisplayName      string  `bson:"displayName" json:"displayName"`
+	Position         string  `bson:"position" json:"position"`
+	DetailedPosition string  `bson:"detailedPosition" json:"detailedPosition"`
+	Nationality      string  `bson:"nationality" json:"nationality"`
+	NationalityCode  string  `bson:"nationalityCode" json:"nationalityCode"`
+	NationalityISO2  string  `bson:"nationalityISO2" json:"nationalityISO2"`
+	Number           int     `bson:"number" json:"number"`
+	Height           int     `bson:"height" json:"height"`
+	Weight           int     `bson:"weight" json:"weight"`
+	DateOfBirth      string  `bson:"dateOfBirth" json:"dateOfBirth"`
+	ImagePath        string  `bson:"imagePath" json:"imagePath"`
+	IsCaptain        bool    `bson:"isCaptain" json:"isCaptain"`
+	Statistics       *string `bson:"statistics,omitempty" json:"statistics,omitempty"`
 }
 
 type MatchStatus string
@@ -46,17 +45,17 @@ const (
 )
 
 type Match struct {
-	ID         string       `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	HomeTeamID string       `gorm:"index" json:"homeTeamId"`
-	AwayTeamID string       `gorm:"index" json:"awayTeamId"`
-	HomeTeam   Team         `gorm:"foreignKey:HomeTeamID" json:"homeTeam,omitempty"`
-	AwayTeam   Team         `gorm:"foreignKey:AwayTeamID" json:"awayTeam,omitempty"`
-	HomeScore  int          `json:"homeScore"`
-	AwayScore  int          `json:"awayScore"`
-	Date       time.Time    `json:"date"`
-	Status     MatchStatus  `json:"status"`
-	SeasonID   string       `json:"seasonId"`
-	Events     []MatchEvent `gorm:"foreignKey:MatchID" json:"events,omitempty"`
+	ID         string       `bson:"_id" json:"id"`
+	HomeTeamID string       `bson:"homeTeamId" json:"homeTeamId"`
+	AwayTeamID string       `bson:"awayTeamId" json:"awayTeamId"`
+	HomeTeam   Team         `bson:"homeTeam,omitempty" json:"homeTeam,omitempty"`
+	AwayTeam   Team         `bson:"awayTeam,omitempty" json:"awayTeam,omitempty"`
+	HomeScore  int          `bson:"homeScore" json:"homeScore"`
+	AwayScore  int          `bson:"awayScore" json:"awayScore"`
+	Date       time.Time    `bson:"date" json:"date"`
+	Status     MatchStatus  `bson:"status" json:"status"`
+	SeasonID   string       `bson:"seasonId" json:"seasonId"`
+	Events     []MatchEvent `bson:"events,omitempty" json:"events,omitempty"`
 }
 
 type EventType string
@@ -69,32 +68,32 @@ const (
 )
 
 type MatchEvent struct {
-	ID       string    `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	MatchID  string    `gorm:"index" json:"matchId"`
-	PlayerID string    `gorm:"index" json:"playerId"`
-	Type     EventType `json:"type"`
-	Minute   int       `json:"minute"`
+	ID       string    `bson:"_id" json:"id"`
+	MatchID  string    `bson:"matchId" json:"matchId"`
+	PlayerID string    `bson:"playerId" json:"playerId"`
+	Type     EventType `bson:"type" json:"type"`
+	Minute   int       `bson:"minute" json:"minute"`
 }
 
 type Season struct {
-	ID       string `gorm:"primaryKey" json:"id"`
-	Year     string `json:"year"`
-	IsActive bool   `json:"isActive"`
+	ID       string `bson:"_id" json:"id"`
+	Year     string `bson:"year" json:"year"`
+	IsActive bool   `bson:"isActive" json:"isActive"`
 }
 
 type Standing struct {
-	TeamID           string   `gorm:"primaryKey" json:"teamId"`
-	Team             Team     `gorm:"foreignKey:TeamID" json:"team,omitempty"`
-	Played           int      `json:"played"`
-	Wins             int      `json:"wins"`
-	Draws            int      `json:"draws"`
-	Losses           int      `json:"losses"`
-	Points           int      `json:"points"`
-	GoalsFor         int      `json:"goalsFor"`
-	GoalsAgainst     int      `json:"goalsAgainst"`
-	GoalDifference   int      `json:"goalDifference"`
-	NextOpponent     string   `gorm:"-" json:"nextOpponent"`
-	NextOpponentLogo string   `gorm:"-" json:"nextOpponentLogo"`
-	Form             []string `gorm:"-" json:"form"`
-	Position         int      `gorm:"-" json:"position"`
+	TeamID           string   `bson:"_id" json:"teamId"`
+	Team             Team     `bson:"team,omitempty" json:"team,omitempty"`
+	Played           int      `bson:"played" json:"played"`
+	Wins             int      `bson:"wins" json:"wins"`
+	Draws            int      `bson:"draws" json:"draws"`
+	Losses           int      `bson:"losses" json:"losses"`
+	Points           int      `bson:"points" json:"points"`
+	GoalsFor         int      `bson:"goalsFor" json:"goalsFor"`
+	GoalsAgainst     int      `bson:"goalsAgainst" json:"goalsAgainst"`
+	GoalDifference   int      `bson:"goalDifference" json:"goalDifference"`
+	NextOpponent     string   `bson:"nextOpponent" json:"nextOpponent"`
+	NextOpponentLogo string   `bson:"nextOpponentLogo" json:"nextOpponentLogo"`
+	Form             []string `bson:"form" json:"form"`
+	Position         int      `bson:"position" json:"position"`
 }

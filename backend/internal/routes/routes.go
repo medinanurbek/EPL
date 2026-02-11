@@ -34,6 +34,7 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/teams/:id", footballHandler.GetTeamByID)
 	api.GET("/teams/:id/matches", footballHandler.GetTeamMatches)
 	api.GET("/teams/:id/squad", footballHandler.GetTeamSquad)
+	api.GET("/players", footballHandler.GetPlayers)
 	api.GET("/players/:id", footballHandler.GetPlayerByID)
 	api.GET("/matches/results-json", footballHandler.GetResultsJSON)
 	api.GET("/matches/next-json", footballHandler.GetNextMatchesJSON)
@@ -54,5 +55,17 @@ func SetupRoutes(r *gin.Engine) {
 	admin.Use(middleware.AdminMiddleware())
 	{
 		admin.POST("/matches", footballHandler.CreateMatch)
+		admin.PATCH("/matches/:id/status", footballHandler.UpdateMatchStatus)
+		admin.DELETE("/reviews/:id", handlers.NewReviewHandler().DeleteReview)
+	}
+
+	// Review Routes (Public/Protected mixed)
+	reviewHandler := handlers.NewReviewHandler()
+	api.GET("/reviews", reviewHandler.GetReviews)
+
+	reviewProtected := api.Group("/reviews")
+	reviewProtected.Use(middleware.AuthMiddleware())
+	{
+		reviewProtected.POST("/", reviewHandler.CreateReview)
 	}
 }

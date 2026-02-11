@@ -4,7 +4,7 @@ import { Team, Standing, Player } from '@/types';
 // Create axios instance with base configuration
 const api = axios.create({
     baseURL: '/api', // Will be proxied to http://localhost:8080/api by Vite
-    timeout: 10000,
+    timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -29,6 +29,12 @@ export const apiService = {
     // Get all teams
     async getTeams(): Promise<Team[]> {
         const response = await api.get<Team[]>('/teams');
+        return response.data;
+    },
+
+    // Get all players
+    async getPlayers(): Promise<Player[]> {
+        const response = await api.get<Player[]>('/players');
         return response.data;
     },
 
@@ -71,7 +77,7 @@ export const apiService = {
         return response.data;
     },
 
-    async register(data: { email: string; password: string; fullName: string }): Promise<{ token: string; message: string }> {
+    async register(data: { email: string; password: string; fullName: string; role: string }): Promise<{ token: string; message: string }> {
         const response = await api.post<{ token: string; message: string }>('/auth/register', data);
         return response.data;
     },
@@ -88,6 +94,24 @@ export const apiService = {
 
     async toggleFavoritePlayer(playerId: string): Promise<void> {
         await api.post(`/user/favorites/players/${playerId}`);
+    },
+
+    // Admin & Reviews
+    async getReviews(): Promise<any[]> {
+        const response = await api.get<any[]>('/reviews');
+        return response.data;
+    },
+
+    async createReview(data: { content: string; rating: number; matchId?: string; teamId?: string; playerId?: string }): Promise<void> {
+        await api.post('/reviews', data);
+    },
+
+    async deleteReview(id: string): Promise<void> {
+        await api.delete(`/reviews/${id}`);
+    },
+
+    async updateMatchStatus(matchId: string, status: string): Promise<void> {
+        await api.patch(`/matches/${matchId}/status`, { status });
     },
 };
 

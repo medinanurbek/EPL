@@ -1,17 +1,17 @@
 package services
 
 import (
+	"context"
 	"log"
 
+	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // UpdateStandings recalculates the standings for the given match.
-// It assumes the match is either new or just updated.
-// For simplicity, this function just increments the stats.
-// In a real system, you might want to recalculate everything from scratch for accuracy.
-func UpdateStandings(match *models.Match, tx *gorm.DB) error {
+func UpdateStandings(ctx context.Context, match *models.Match) error {
 	if match.Status != models.MatchFinished {
 		return nil
 	}
@@ -25,11 +25,16 @@ func UpdateStandings(match *models.Match, tx *gorm.DB) error {
 		{match.AwayTeamID, match.AwayScore, match.HomeScore},
 	}
 
+	coll := database.DB.Collection("standings")
+
 	for _, t := range teams {
 		var standing models.Standing
-		err := tx.FirstOrCreate(&standing, models.Standing{TeamID: t.ID}).Error
+		filter := bson.M{"_id": t.ID}
+
+		err := coll.FindOne(ctx, filter).Decode(&standing)
 		if err != nil {
-			return err
+			// If not found, a new standing object will be initialized with zeroes
+			standing.TeamID = t.ID
 		}
 
 		standing.Played++
@@ -47,7 +52,10 @@ func UpdateStandings(match *models.Match, tx *gorm.DB) error {
 			standing.Losses++
 		}
 
-		if err := tx.Save(&standing).Error; err != nil {
+		// Update or Insert
+		opts := options.Update().SetUpsert(true)
+		_, err = coll.UpdateOne(ctx, filter, bson.M{"$set": standing}, opts)
+		if err != nil {
 			return err
 		}
 	}

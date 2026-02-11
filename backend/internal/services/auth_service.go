@@ -19,10 +19,15 @@ func NewAuthService() *AuthService {
 	}
 }
 
-func (s *AuthService) Register(email, password, fullName string) (string, error) {
+func (s *AuthService) Register(email, password, fullName, role string) (string, error) {
+	// Validate role
+	if role != "ADMIN" && role != "USER" {
+		role = "USER" // Default to USER if invalid
+	}
+
 	// Check if user exists
 	existingUser, err := s.userRepo.GetUserByEmail(email)
-	if err == nil && existingUser.ID != "" {
+	if err == nil && !existingUser.ID.IsZero() {
 		return "", errors.New("user already exists")
 	}
 
@@ -35,14 +40,14 @@ func (s *AuthService) Register(email, password, fullName string) (string, error)
 		Email:    email,
 		Password: string(hashedPassword),
 		FullName: fullName,
-		Role:     "GUEST",
+		Role:     role,
 	}
 
 	if err := s.userRepo.CreateUser(newUser); err != nil {
 		return "", err
 	}
 
-	return utils.GenerateToken(newUser.ID, newUser.Email, newUser.Role)
+	return utils.GenerateToken(newUser.ID.Hex(), newUser.Email, newUser.Role)
 }
 
 func (s *AuthService) Login(email, password string) (string, *models.User, error) {
@@ -55,7 +60,7 @@ func (s *AuthService) Login(email, password string) (string, *models.User, error
 		return "", nil, errors.New("invalid credentials")
 	}
 
-	token, err := utils.GenerateToken(user.ID, user.Email, user.Role)
+	token, err := utils.GenerateToken(user.ID.Hex(), user.Email, user.Role)
 	return token, user, err
 }
 

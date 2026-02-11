@@ -91,9 +91,35 @@ func (h *FootballHandler) GetMatchByID(c *gin.Context) {
 	c.JSON(http.StatusOK, match)
 }
 
+func (h *FootballHandler) UpdateMatchStatus(c *gin.Context) {
+	id := c.Param("id")
+	var req struct {
+		Status models.MatchStatus `json:"status" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.service.UpdateMatchStatus(id, req.Status); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Match status updated"})
+}
+
 func (h *FootballHandler) GetTeamSquad(c *gin.Context) {
 	teamID := c.Param("id")
 	players, err := h.service.GetTeamSquad(teamID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, players)
+}
+
+func (h *FootballHandler) GetPlayers(c *gin.Context) {
+	players, err := h.service.GetAllPlayers()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

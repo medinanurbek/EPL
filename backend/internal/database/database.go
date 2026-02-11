@@ -1,42 +1,35 @@
 package database
 
 import (
-	"fmt"
+	"context"
 	"log"
+	"time"
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/config"
-	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var DB *gorm.DB
+var MongoClient *mongo.Client
+var DB *mongo.Database
 
 func ConnectDB(cfg *config.Config) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		cfg.DBHost, cfg.DBUser, cfg.DBPassword, cfg.DBName, cfg.DBPort)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	var err error
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	clientOptions := options.Client().ApplyURI(cfg.MongoURI)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
 
-	log.Println("Database connection established")
-
-	// AutoMigrate
-	log.Println("Running migrations...")
-	err = DB.AutoMigrate(
-		&models.User{},
-		&models.Team{},
-		&models.Player{},
-		&models.Season{},
-		&models.Match{},
-		&models.MatchEvent{},
-		&models.Standing{},
-	)
+	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
+		log.Fatalf("Failed to ping MongoDB: %v", err)
 	}
-	log.Println("Database migration completed")
+
+	MongoClient = client
+	DB = client.Database(cfg.MongoDBName)
+
+	log.Println("MongoDB connection established")
 }

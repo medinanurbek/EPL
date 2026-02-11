@@ -17,7 +17,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     const [favPlayers, setFavPlayers] = useState<string[]>([]);
     const [userId, setUserId] = useState<string | null>(null);
 
-    // Initial load and listen for auth changes to re-fetch
     useEffect(() => {
         const checkAuthAndLoad = () => {
             const user = localStorage.getItem("epl_current_user");
@@ -51,12 +50,10 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
             setFavPlayers(data.players || []);
         } catch (error) {
             console.error("Failed to load favorites", error);
-            // Fallback to local storage if API fails or user is guest (though backend handles guests too)
         }
     };
 
     const toggleFavTeam = async (id: string) => {
-        // Optimistic update
         const isFav = favTeams.includes(id);
         const newFavs = isFav ? favTeams.filter(t => t !== id) : [...favTeams, id];
         setFavTeams(newFavs);
@@ -64,7 +61,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         try {
             await apiService.toggleFavoriteTeam(id);
         } catch (error: any) {
-            // Revert on error
             console.error("Failed to toggle team favorite", error);
             console.error("Error details:", error.response?.data, error.status);
             setFavTeams(favTeams);
@@ -72,7 +68,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     };
 
     const toggleFavPlayer = async (id: string) => {
-        // Optimistic update
         const isFav = favPlayers.includes(id);
         const newFavs = isFav ? favPlayers.filter(p => p !== id) : [...favPlayers, id];
         setFavPlayers(newFavs);

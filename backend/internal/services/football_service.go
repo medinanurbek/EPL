@@ -1,14 +1,16 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"os"
-	"sort"
+	"time"
 
-	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
+	"log"
+	"strings"
+
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/repositories"
-	"gorm.io/gorm"
 )
 
 type FootballService struct {
@@ -39,23 +41,10 @@ type MatchJSON struct {
 }
 
 func (s *FootballService) GetStandings() ([]models.Standing, error) {
-	var standings []models.Standing
-
-	// Read standings from database with team information
-	if err := database.DB.Preload("Team").Find(&standings).Error; err != nil {
+	standings, err := s.matchRepo.GetStandings()
+	if err != nil {
 		return nil, err
 	}
-
-	// Sort by points, then goal difference, then goals for
-	sort.Slice(standings, func(i, j int) bool {
-		if standings[i].Points != standings[j].Points {
-			return standings[i].Points > standings[j].Points
-		}
-		if standings[i].GoalDifference != standings[j].GoalDifference {
-			return standings[i].GoalDifference > standings[j].GoalDifference
-		}
-		return standings[i].GoalsFor > standings[j].GoalsFor
-	})
 
 	// Assign positions
 	for i := range standings {
@@ -112,29 +101,31 @@ func (s *FootballService) GetStandings() ([]models.Standing, error) {
 }
 
 func normalizeTeamName(name string) string {
-	if len(name) > 3 && name[len(name)-3:] == " FC" {
-		return name[:len(name)-3]
+	name = strings.TrimSpace(name)
+	if strings.HasSuffix(name, " FC") {
+		return strings.TrimSpace(name[:len(name)-3])
 	}
-	if len(name) > 4 && name[len(name)-4:] == " AFC" {
-		return name[:len(name)-4]
+	if strings.HasSuffix(name, " AFC") {
+		return strings.TrimSpace(name[:len(name)-4])
 	}
 	return name
 }
 
 func (s *FootballService) CreateMatch(match *models.Match) error {
-	return database.DB.Transaction(func(tx *gorm.DB) error {
-		// 1. Create the Match
-		if err := tx.Create(match).Error; err != nil {
-			return err
-		}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-		// 2. Update Standings if Finished
-		if err := UpdateStandings(match, tx); err != nil {
-			return err
-		}
+	// 1. Create the Match
+	if err := s.matchRepo.CreateMatch(match); err != nil {
+		return err
+	}
 
-		return nil
-	})
+	// 2. Update Standings if Finished
+	if err := UpdateStandings(ctx, match); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *FootballService) GetAllTeams() ([]models.Team, error) {
@@ -149,8 +140,22 @@ func (s *FootballService) GetMatchByID(id string) (*models.Match, error) {
 	return s.matchRepo.GetMatchByID(id)
 }
 
+func (s *FootballService) UpdateMatchStatus(id string, status models.MatchStatus) error {
+	match, err := s.matchRepo.GetMatchByID(id)
+	if err != nil {
+		return err
+	}
+
+	match.Status = status
+	return s.matchRepo.UpdateMatch(match)
+}
+
 func (s *FootballService) GetTeamSquad(teamID string) ([]models.Player, error) {
 	return s.matchRepo.GetTeamSquad(teamID)
+}
+
+func (s *FootballService) GetAllPlayers() ([]models.Player, error) {
+	return s.matchRepo.GetAllPlayers()
 }
 
 func (s *FootballService) GetPlayerByID(playerID string) (*models.Player, error) {
@@ -180,12 +185,16 @@ func (s *FootballService) GetTeamMatches(teamID string) (*TeamMatchesResponse, e
 	}
 
 	targetName := normalizeTeamName(team.Name)
+	log.Printf("Getting matches for team: %s (Normalized: %s)", team.Name, targetName)
 
 	// 2. Get Past Matches (Results)
 	resultsBytes, err := os.ReadFile("../results.json")
-	if err == nil {
+	if err != nil {
+		log.Printf("Error reading results.json: %v", err)
+	} else {
 		var results []MatchJSON
 		if err := json.Unmarshal(resultsBytes, &results); err == nil {
+			log.Printf("Total results in file: %d", len(results))
 			// Filter for this team
 			var teamResults []MatchJSON
 			for _, m := range results {
@@ -193,6 +202,7 @@ func (s *FootballService) GetTeamMatches(teamID string) (*TeamMatchesResponse, e
 					teamResults = append(teamResults, m)
 				}
 			}
+			log.Printf("Found %d results for team %s", len(teamResults), targetName)
 
 			// Sort descending (assuming they are chronological in file, we reverse)
 			// Actually file is chronological 1..N. We want latest first.

@@ -1,63 +1,209 @@
 package repositories
 
 import (
+	"context"
+	"log"
+	"time"
+
 	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type MatchRepository struct{}
-
-func NewMatchRepository() *MatchRepository {
-	return &MatchRepository{}
+type MatchRepository struct {
+	collection *mongo.Collection
 }
 
-func (r *MatchRepository) GetAllMatches() ([]models.Match, error) {
-	var matches []models.Match
-	err := database.DB.Preload("HomeTeam").Preload("AwayTeam").Preload("Events").Find(&matches).Error
-	return matches, err
+func NewMatchRepository() *MatchRepository {
+	return &MatchRepository{
+		collection: database.DB.Collection("matches"),
+	}
 }
 
 func (r *MatchRepository) CreateMatch(match *models.Match) error {
-	return database.DB.Create(match).Error
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := r.collection.InsertOne(ctx, match)
+	return err
 }
 
-func (r *MatchRepository) UpdateMatch(match *models.Match) error {
-	return database.DB.Save(match).Error
+func (r *MatchRepository) GetAllMatches() ([]models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	opts := options.Find().SetSort(bson.M{"date": 1})
+	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var matches []models.Match
+	if err := cursor.All(ctx, &matches); err != nil {
+		return nil, err
+	}
+	return matches, nil
 }
 
 func (r *MatchRepository) GetMatchByID(id string) (*models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	var match models.Match
-	err := database.DB.Preload("HomeTeam").Preload("AwayTeam").Preload("Events").First(&match, "id = ?", id).Error
-	return &match, err
+	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&match)
+	if err != nil {
+		return nil, err
+	}
+	return &match, nil
+}
+
+func (r *MatchRepository) GetMatchesByTeamID(teamID string) ([]models.Match, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{
+		"$or": []bson.M{
+			{"homeTeamId": teamID},
+			{"awayTeamId": teamID},
+		},
+	}
+	opts := options.Find().SetSort(bson.M{"date": 1})
+	cursor, err := r.collection.Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var matches []models.Match
+	if err := cursor.All(ctx, &matches); err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
+
+func (r *MatchRepository) UpdateMatch(match *models.Match) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := r.collection.ReplaceOne(ctx, bson.M{"_id": match.ID}, match)
+	return err
 }
 
 func (r *MatchRepository) GetStandings() ([]models.Standing, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("standings")
+	opts := options.Find().SetSort(bson.D{
+		{Key: "points", Value: -1},
+		{Key: "goalDifference", Value: -1},
+		{Key: "goalsFor", Value: -1},
+	})
+	cursor, err := coll.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
 	var standings []models.Standing
-	// Ensure we preload the Team info for the table
-	err := database.DB.Preload("Team").Order("points desc, goal_difference desc, goals_for desc").Find(&standings).Error
-	return standings, err
+	if err := cursor.All(ctx, &standings); err != nil {
+		return nil, err
+	}
+	return standings, nil
+}
+
+func (r *MatchRepository) GetAllPlayers() ([]models.Player, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
+
+	opts := options.Find().SetSort(bson.D{
+		{Key: "name", Value: 1},
+	}).SetProjection(bson.M{
+		"statistics": 0,
+	})
+
+	cursor, err := coll.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		log.Printf("ERROR: GetAllPlayers find failed: %v", err)
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var players []models.Player
+	if err := cursor.All(ctx, &players); err != nil {
+		log.Printf("ERROR: GetAllPlayers all failed: %v", err)
+		return nil, err
+	}
+	return players, nil
 }
 
 func (r *MatchRepository) GetTeamSquad(teamID string) ([]models.Player, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
+	opts := options.Find().SetSort(bson.D{
+		{Key: "position", Value: 1},
+		{Key: "number", Value: 1},
+	})
+	cursor, err := coll.Find(ctx, bson.M{"teamId": teamID}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
 	var players []models.Player
-	err := database.DB.Where("team_id = ?", teamID).Order("position, number").Find(&players).Error
-	return players, err
+	if err := cursor.All(ctx, &players); err != nil {
+		return nil, err
+	}
+	return players, nil
 }
 
 func (r *MatchRepository) GetPlayerByID(playerID string) (*models.Player, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("players")
 	var player models.Player
-	err := database.DB.First(&player, "id = ?", playerID).Error
-	return &player, err
+	err := coll.FindOne(ctx, bson.M{"_id": playerID}).Decode(&player)
+	if err != nil {
+		return nil, err
+	}
+	return &player, nil
 }
 
 func (r *MatchRepository) GetAllTeams() ([]models.Team, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("teams")
+	cursor, err := coll.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
 	var teams []models.Team
-	err := database.DB.Find(&teams).Error
-	return teams, err
+	if err := cursor.All(ctx, &teams); err != nil {
+		return nil, err
+	}
+	return teams, nil
 }
 
 func (r *MatchRepository) GetTeamByID(teamID string) (*models.Team, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	coll := database.DB.Collection("teams")
 	var team models.Team
-	err := database.DB.First(&team, "id = ?", teamID).Error
-	return &team, err
+	err := coll.FindOne(ctx, bson.M{"_id": teamID}).Decode(&team)
+	if err != nil {
+		return nil, err
+	}
+	return &team, nil
 }

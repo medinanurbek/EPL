@@ -1,15 +1,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"time"
 
 	"github.com/Sanat-07/English-Premier-League/backend/internal/config"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/database"
 	"github.com/Sanat-07/English-Premier-League/backend/internal/models"
-	"gorm.io/gorm/clause"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // JSON Structures matching ptext.txt
@@ -50,6 +53,9 @@ func main() {
 	cfg := config.LoadConfig()
 	database.ConnectDB(cfg)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	// 2. Read File
 	filePath := "../../ptext.txt" // Relative to cmd/seed/main.go
 	data, err := ioutil.ReadFile(filePath)
@@ -69,6 +75,9 @@ func main() {
 
 	fmt.Printf("Found %d standings entries\n", len(standings))
 
+	teamColl := database.DB.Collection("teams")
+	standingColl := database.DB.Collection("standings")
+
 	// 3. Process Data
 	for _, s := range standings {
 		// --- Sync Team ---
@@ -77,13 +86,13 @@ func main() {
 			Name:      s.Participant.Name,
 			ShortName: s.Participant.ShortCode,
 			LogoURL:   s.Participant.ImagePath,
-			// City and Stadium omitted for now as they require venue lookups or are not directly in participant object simple fields
 		}
 
-		if err := database.DB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"name", "short_name", "logo_url"}),
-		}).Create(&team).Error; err != nil {
+		filter := bson.M{"_id": team.ID}
+		update := bson.M{"$set": team}
+		opts := options.Update().SetUpsert(true)
+		_, err := teamColl.UpdateOne(ctx, filter, update, opts)
+		if err != nil {
 			log.Printf("Error syncing team %s: %v", team.Name, err)
 			continue
 		}
@@ -110,11 +119,6 @@ func main() {
 			}
 		}
 
-		// Note: The 'Form' in our model is not yet defined as a string array,
-		// but checking football.go, Standing struct doesn't have Form.
-		// We might need to add it or ignore for now.
-		// Let's check football.go again. (It has Played, Wins, etc.)
-
 		standing := models.Standing{
 			TeamID:         team.ID,
 			Played:         played,
@@ -125,15 +129,17 @@ func main() {
 			GoalsFor:       gf,
 			GoalsAgainst:   ga,
 			GoalDifference: gd,
+			Team:           team, // Embed team for easier access
 		}
 
-		if err := database.DB.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "team_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"played", "wins", "draws", "losses", "points", "goals_for", "goals_against", "goal_difference"}),
-		}).Create(&standing).Error; err != nil {
+		filter = bson.M{"_id": team.ID}
+		update = bson.M{"$set": standing}
+		_, err = standingColl.UpdateOne(ctx, filter, update, opts)
+		if err != nil {
 			log.Printf("Error syncing standing for %s: %v", team.Name, err)
 		}
 	}
 
+	CreateAdmin()
 	fmt.Println("Seeding completed successfully!")
 }

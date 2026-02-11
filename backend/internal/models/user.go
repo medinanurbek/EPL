@@ -3,21 +3,21 @@ package models
 import (
 	"time"
 
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
-	ID        string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()" json:"id"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	CreatedAt time.Time          `bson:"createdAt" json:"createdAt"`
+	UpdatedAt time.Time          `bson:"updatedAt" json:"updatedAt"`
+	DeletedAt *time.Time         `bson:"deletedAt,omitempty" json:"-"`
 
-	Email    string `gorm:"uniqueIndex;not null" json:"email"`
-	Password string `json:"-"` // Never return password
-	FullName string `json:"fullName"`
+	Email    string `bson:"email" json:"email"`
+	Password string `bson:"password" json:"-"`
+	FullName string `bson:"fullName" json:"fullName"`
 	// Favorites
-	FavoriteTeams   []Team   `gorm:"many2many:user_favorite_teams;" json:"favoriteTeams"`
-	FavoritePlayers []Player `gorm:"many2many:user_favorite_players;" json:"favoritePlayers"`
+	FavoriteTeams   []Team   `bson:"favoriteTeams" json:"favoriteTeams"`
+	FavoritePlayers []Player `bson:"favoritePlayers" json:"favoritePlayers"`
 
-	Role string `gorm:"default:'GUEST'" json:"role"` // GUEST, ADMIN
+	Role string `bson:"role" json:"role"` // GUEST, ADMIN
 }

@@ -42,7 +42,10 @@ export default function TeamDetailsPage() {
 
                 // Fetch standings to get position
                 const standingsData = await apiService.getStandings();
-                const teamStanding = standingsData.find(s => s.team.id === teamId || s.team.name === teamData.name);
+                const teamStanding = standingsData.find(s =>
+                    (String(s.team?.id) === String(teamId)) ||
+                    s.team?.name === teamData.name
+                );
                 if (teamStanding) {
                     setStanding(teamStanding);
                 }
@@ -141,9 +144,10 @@ export default function TeamDetailsPage() {
                                     <div className="flex items-center justify-between">
                                         {/* Determine Home/Away for Next Match */}
                                         {(() => {
-                                            const cleanTeamName = team.name.replace(/\s+(FC|AFC)$/i, '').trim();
-                                            const cleanHomeTeam = matchesData.nextMatch.homeTeam.replace(/\s+(FC|AFC)$/i, '').trim();
-                                            const isHome = cleanHomeTeam.includes(cleanTeamName) || cleanTeamName.includes(cleanHomeTeam);
+                                            const cleanTeamName = (team.name || "").replace(/\s+(FC|AFC)$/i, '').trim();
+                                            const cleanHomeTeam = (matchesData.nextMatch.homeTeam || "").replace(/\s+(FC|AFC)$/i, '').trim();
+                                            const isHome = (cleanHomeTeam && cleanTeamName && cleanHomeTeam.includes(cleanTeamName)) ||
+                                                (cleanTeamName && cleanTeamName.includes(cleanHomeTeam || "###"));
                                             const opponent = isHome ? matchesData.nextMatch.awayTeam : matchesData.nextMatch.homeTeam;
 
                                             // TODO: Logic if we want to show Home Team on left always or Current Team on left always
@@ -198,10 +202,11 @@ export default function TeamDetailsPage() {
                                 <div className="space-y-4">
                                     {matchesData.recentMatches.slice(0, 5).map((match: any, idx: number) => {
                                         // Normalize names for comparison (remove FC/AFC and trim)
-                                        const cleanTeamName = team.name.replace(/\s+(FC|AFC)$/i, '').trim();
-                                        const cleanHomeTeam = match.homeTeam.replace(/\s+(FC|AFC)$/i, '').trim();
+                                        const cleanTeamName = (team.name || "").replace(/\s+(FC|AFC)$/i, '').trim();
+                                        const cleanHomeTeam = (match.homeTeam || "").replace(/\s+(FC|AFC)$/i, '').trim();
 
-                                        const isHome = cleanHomeTeam.includes(cleanTeamName) || cleanTeamName.includes(cleanHomeTeam);
+                                        const isHome = (cleanHomeTeam && cleanTeamName && cleanHomeTeam.includes(cleanTeamName)) ||
+                                            (cleanTeamName && cleanTeamName.includes(cleanHomeTeam || "###"));
                                         const opponent = isHome ? match.awayTeam : match.homeTeam;
                                         const score = `${match.homeScore} - ${match.awayScore}`;
 
@@ -261,10 +266,11 @@ export default function TeamDetailsPage() {
                                 <div className="grid grid-cols-5 gap-3">
                                     {matchesData.upcoming.map((match: any, idx: number) => {
                                         // Normalize names
-                                        const cleanTeamName = team.name.replace(/\s+(FC|AFC)$/i, '').trim();
-                                        const cleanHomeTeam = match.homeTeam.replace(/\s+(FC|AFC)$/i, '').trim();
+                                        const cleanTeamName = (team.name || "").replace(/\s+(FC|AFC)$/i, '').trim();
+                                        const cleanHomeTeam = (match.homeTeam || "").replace(/\s+(FC|AFC)$/i, '').trim();
 
-                                        const isHome = cleanHomeTeam.includes(cleanTeamName) || cleanTeamName.includes(cleanHomeTeam);
+                                        const isHome = (cleanHomeTeam && cleanTeamName && cleanHomeTeam.includes(cleanTeamName)) ||
+                                            (cleanTeamName && cleanTeamName.includes(cleanHomeTeam || "###"));
                                         const opponent = isHome ? match.awayTeam : match.homeTeam;
 
                                         return (

@@ -21,6 +21,7 @@ type RegisterRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 	FullName string `json:"fullName" binding:"required"`
+	Role     string `json:"role"`
 }
 
 type LoginRequest struct {
@@ -35,7 +36,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	token, err := h.authService.Register(req.Email, req.Password, req.FullName)
+	token, err := h.authService.Register(req.Email, req.Password, req.FullName, req.Role)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

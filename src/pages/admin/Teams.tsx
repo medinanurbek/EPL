@@ -35,52 +35,52 @@ export default function ManageTeams() {
     };
 
     return (
-        <div className="py-12 bg-slate-50 min-h-screen">
+        <div className="py-12 bg-[#37003c] min-h-screen font-inter text-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
-                        <Link to="/admin" className="inline-flex items-center gap-2 text-[#37003c]/40 hover:text-[#37003c] mb-4 transition-colors text-[10px] font-black uppercase tracking-widest">
+                        <Link to="/admin" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-4 transition-colors text-[10px] font-black uppercase tracking-widest">
                             <ArrowLeft className="w-3 h-3" /> Dashboard
                         </Link>
-                        <h1 className="text-4xl font-black text-[#37003c] tracking-tighter uppercase">Manage Clubs</h1>
+                        <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Manage Clubs</h1>
                     </div>
                     <button
                         onClick={() => setIsAdding(true)}
-                        className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#37003c] text-white font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
+                        className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#00ff85] text-[#37003c] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl active:scale-95"
                     >
                         <Plus className="w-5 h-5" /> Register New Club
                     </button>
                 </header>
 
                 {isAdding && (
-                    <div className="mb-8 glass-card p-10 bg-white border-t-8 border-t-[#00ff85] rounded-[2.5rem] shadow-2xl">
+                    <div className="mb-8 glass-card p-10 bg-white/5 border-t-8 border-t-[#00ff85] rounded-[2.5rem] shadow-2xl border border-white/10">
                         <div className="flex items-center justify-between mb-10">
-                            <h2 className="text-sm font-black text-[#37003c] uppercase tracking-widest">Register New Club</h2>
-                            <button onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-[#ff005a]"><X className="w-6 h-6" /></button>
+                            <h2 className="text-sm font-black text-white uppercase tracking-widest">Register New Club</h2>
+                            <button onClick={() => setIsAdding(false)} className="text-white/20 hover:text-[#ff005a]"><X className="w-6 h-6" /></button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Club Name</label>
+                                <label className="text-[10px] font-black text-white/30 uppercase tracking-widest px-1">Club Name</label>
                                 <input
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-[#37003c] focus:outline-none font-bold"
+                                    className="w-full px-5 py-4 rounded-2xl border border-white/5 bg-white/5 focus:border-[#00ff85] focus:outline-none font-bold text-white placeholder:text-white/10"
                                     value={newTeam.name}
                                     onChange={e => setNewTeam({ ...newTeam, name: e.target.value })}
                                     placeholder="e.g. Liverpool"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">City</label>
+                                <label className="text-[10px] font-black text-white/30 uppercase tracking-widest px-1">City</label>
                                 <input
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-[#37003c] focus:outline-none font-bold"
+                                    className="w-full px-5 py-4 rounded-2xl border border-white/5 bg-white/5 focus:border-[#00ff85] focus:outline-none font-bold text-white placeholder:text-white/10"
                                     value={newTeam.city}
                                     onChange={e => setNewTeam({ ...newTeam, city: e.target.value })}
                                     placeholder="e.g. Manchester"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Stadium</label>
+                                <label className="text-[10px] font-black text-white/30 uppercase tracking-widest px-1">Stadium</label>
                                 <input
-                                    className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-[#37003c] focus:outline-none font-bold"
+                                    className="w-full px-5 py-4 rounded-2xl border border-white/5 bg-white/5 focus:border-[#00ff85] focus:outline-none font-bold text-white placeholder:text-white/10"
                                     value={newTeam.stadium}
                                     onChange={e => setNewTeam({ ...newTeam, stadium: e.target.value })}
                                     placeholder="e.g. Anfield"
@@ -98,9 +98,9 @@ export default function ManageTeams() {
                     </div>
                 )}
 
-                <div className="glass-card bg-white overflow-hidden rounded-[2.5rem] shadow-2xl">
+                <div className="glass-card bg-white/5 overflow-hidden rounded-[2.5rem] shadow-2xl border border-white/10">
                     <table className="w-full text-left">
-                        <thead className="bg-[#37003c] text-white">
+                        <thead className="bg-[#37003c] text-[#00ff85]">
                             <tr>
                                 <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest w-1/3">Official Club Name</th>
                                 <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest">Location</th>
@@ -108,27 +108,27 @@ export default function ManageTeams() {
                                 <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-50 mt-2">
+                        <tbody className="divide-y divide-white/5 mt-2">
                             {teams.map(team => (
-                                <tr key={team.id} className="group hover:bg-slate-50 transition-colors">
+                                <tr key={team.id} className="group hover:bg-white/5 transition-colors">
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-6">
                                             <div className="relative w-10 h-10 flex-shrink-0 transition-transform group-hover:scale-110">
                                                 <img
                                                     src={getTeamLogo(team.name)}
                                                     alt={team.name}
-                                                    className="w-full h-full object-contain"
+                                                    className="w-full h-full object-contain brightness-110"
                                                 />
                                             </div>
-                                            <span className="font-black text-[#37003c] tracking-tight uppercase">{team.name}</span>
+                                            <span className="font-black text-white tracking-tight uppercase">{team.name}</span>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-6 text-sm font-bold text-slate-500 italic uppercase">{team.city}</td>
-                                    <td className="px-8 py-6 text-sm font-bold text-slate-500 uppercase">{team.stadium}</td>
+                                    <td className="px-8 py-6 text-sm font-bold text-white/50 italic uppercase">{team.city}</td>
+                                    <td className="px-8 py-6 text-sm font-bold text-white/50 uppercase">{team.stadium}</td>
                                     <td className="px-8 py-6 text-right">
                                         <div className="flex items-center justify-end gap-3 translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
-                                            <button className="p-3 bg-slate-50 rounded-xl text-slate-400 hover:text-[#37003c] transition-colors"><Edit2 className="w-4 h-4" /></button>
-                                            <button onClick={() => handleDelete(team.id)} className="p-3 bg-slate-50 rounded-xl text-slate-400 hover:text-[#ff005a] transition-colors"><Trash2 className="w-4 h-4" /></button>
+                                            <button className="p-3 bg-white/5 rounded-xl text-white/20 hover:text-[#00ff85] transition-colors border border-white/5"><Edit2 className="w-4 h-4" /></button>
+                                            <button onClick={() => handleDelete(team.id)} className="p-3 bg-white/5 rounded-xl text-white/20 hover:text-[#ff005a] transition-colors border border-white/5"><Trash2 className="w-4 h-4" /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -137,8 +137,8 @@ export default function ManageTeams() {
                     </table>
                     {teams.length === 0 && (
                         <div className="py-24 text-center">
-                            <Shield className="w-16 h-16 text-slate-100 mx-auto mb-6" />
-                            <p className="text-slate-400 font-black uppercase text-[10px] tracking-widest">No clubs registered in the system.</p>
+                            <Shield className="w-16 h-16 text-white/5 mx-auto mb-6" />
+                            <p className="text-white/20 font-black uppercase text-[10px] tracking-widest">No clubs registered in the system.</p>
                         </div>
                     )}
                 </div>

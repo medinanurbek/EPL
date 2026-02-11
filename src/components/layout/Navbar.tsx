@@ -9,6 +9,7 @@ const navItems = [
     { name: "Teams", href: "/teams", icon: Users },
     { name: "Stats", href: "/stats", icon: TrendingUp },
     { name: "Players", href: "/players", icon: Users },
+    { name: "Admin", href: "/admin", icon: Briefcase },
 ];
 
 const adminItems = [
@@ -62,6 +63,9 @@ export function Navbar() {
 
                     <div className="hidden md:flex items-center gap-1">
                         {(isAdmin ? adminItems : navItems).map((item) => {
+                            // Check if admin item and user is not admin
+                            if (item.href.startsWith("/admin") && user?.role !== "ADMIN") return null;
+
                             const Icon = item.icon;
                             const isActive = pathname === item.href;
                             return (

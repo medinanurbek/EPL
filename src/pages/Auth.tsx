@@ -15,7 +15,8 @@ function AuthForm() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        fullName: ""
+        fullName: "",
+        role: "USER" as "USER" | "ADMIN"
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,8 @@ function AuthForm() {
                 await apiService.register({
                     email: formData.email,
                     password: formData.password,
-                    fullName: formData.fullName
+                    fullName: formData.fullName,
+                    role: formData.role
                 });
 
                 // Auto-login to get user details
@@ -142,6 +144,25 @@ function AuthForm() {
                         className="w-full pl-14 pr-6 py-4.5 rounded-2xl border border-white/10 bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#00ff85]/20 focus:border-[#00ff85] transition-all font-outfit font-bold text-white placeholder:text-white/20 selection:bg-[#00ff85]/30"
                     />
                 </div>
+
+                {mode === "register" && (
+                    <div className="flex gap-4 p-1 bg-white/5 rounded-2xl border border-white/5">
+                        <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, role: "USER" }))}
+                            className={`flex-1 py-3 rounded-xl font-outfit font-bold text-[10px] uppercase tracking-wider transition-all ${formData.role === "USER" ? "bg-[#00ff85] text-[#37003c] shadow-lg shadow-[#00ff85]/20" : "text-white/40 hover:text-white"}`}
+                        >
+                            Fan (User)
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, role: "ADMIN" }))}
+                            className={`flex-1 py-3 rounded-xl font-outfit font-bold text-[10px] uppercase tracking-wider transition-all ${formData.role === "ADMIN" ? "bg-[#ff005a] text-white shadow-lg shadow-[#ff005a]/20" : "text-white/40 hover:text-white"}`}
+                        >
+                            Staff (Admin)
+                        </button>
+                    </div>
+                )}
 
                 <button
                     type="submit"
