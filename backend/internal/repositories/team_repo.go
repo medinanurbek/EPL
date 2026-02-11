@@ -56,7 +56,6 @@ func (r *TeamRepository) CreateTeam(team *models.Team) error {
 	_, err := r.collection.InsertOne(ctx, team)
 	return err
 }
-
 func (r *TeamRepository) UpdateTeamCoach(teamID, coachName string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

@@ -33,13 +33,16 @@ func (s *FootballService) GetAllMatches() ([]models.Match, error) {
 
 // Helper for local JSON structure
 type MatchJSON struct {
-	Matchday  int    `json:"matchday"`
-	Date      string `json:"date"`
-	Time      string `json:"time"`
-	HomeTeam  string `json:"homeTeam"`
-	AwayTeam  string `json:"awayTeam"`
-	HomeScore int    `json:"homeScore"`
-	AwayScore int    `json:"awayScore"`
+	ID         string `json:"id"`
+	Matchday   int    `json:"matchday"`
+	Date       string `json:"date"`
+	Time       string `json:"time"`
+	HomeTeam   string `json:"homeTeam"`
+	AwayTeam   string `json:"awayTeam"`
+	HomeScore  int    `json:"homeScore"`
+	AwayScore  int    `json:"awayScore"`
+	HomeTeamID string `json:"homeTeamId"`
+	AwayTeamID string `json:"awayTeamId"`
 }
 
 func (s *FootballService) GetStandings() ([]models.Standing, error) {
@@ -162,36 +165,6 @@ func (s *FootballService) GetAllPlayers() ([]models.Player, error) {
 
 func (s *FootballService) GetPlayerByID(playerID string) (*models.Player, error) {
 	return s.matchRepo.GetPlayerByID(playerID)
-}
-
-type StatsResponse struct {
-	TopScorers  []repositories.StatEntry `json:"topScorers"`
-	TopAssists  []repositories.StatEntry `json:"topAssists"`
-	CleanSheets []repositories.StatEntry `json:"cleanSheets"`
-}
-
-func (s *FootballService) GetStats() (*StatsResponse, error) {
-	topScorers, err := s.matchRepo.GetTopScorers(10)
-	if err != nil {
-		return nil, err
-	}
-	topAssists, err := s.matchRepo.GetTopAssists(10)
-	if err != nil {
-		return nil, err
-	}
-	cleanSheets, err := s.matchRepo.GetCleanSheets(10)
-	if err != nil {
-		return nil, err
-	}
-	return &StatsResponse{
-		TopScorers:  topScorers,
-		TopAssists:  topAssists,
-		CleanSheets: cleanSheets,
-	}, nil
-}
-
-func (s *FootballService) GetMatchGoalEvents(matchIndex int) ([]models.GoalEvent, error) {
-	return s.matchRepo.GetMatchGoalEvents(matchIndex)
 }
 
 type TeamMatchesResponse struct {
@@ -528,13 +501,16 @@ func (s *FootballService) GetLatestResults() ([]MatchJSON, error) {
 	var results []MatchJSON
 	for _, m := range matches {
 		results = append(results, MatchJSON{
-			Matchday:  m.Matchday,
-			Date:      m.Date.Format(time.RFC3339),
-			Time:      m.Date.Format("15:04"),
-			HomeTeam:  teamMap[m.HomeTeamID],
-			AwayTeam:  teamMap[m.AwayTeamID],
-			HomeScore: m.HomeScore,
-			AwayScore: m.AwayScore,
+			ID:         m.ID,
+			Matchday:   m.Matchday,
+			Date:       m.Date.Format(time.RFC3339),
+			Time:       m.Date.Format("15:04"),
+			HomeTeam:   teamMap[m.HomeTeamID],
+			AwayTeam:   teamMap[m.AwayTeamID],
+			HomeScore:  m.HomeScore,
+			AwayScore:  m.AwayScore,
+			HomeTeamID: m.HomeTeamID,
+			AwayTeamID: m.AwayTeamID,
 		})
 	}
 	return results, nil
@@ -559,34 +535,15 @@ func (s *FootballService) GetUpcomingFixtures() ([]MatchJSON, error) {
 	var upcoming []MatchJSON
 	for _, m := range matches {
 		upcoming = append(upcoming, MatchJSON{
-			Matchday: m.Matchday,
-			Date:     m.Date.Format(time.RFC3339),
-			Time:     m.Date.Format("15:04"),
-			HomeTeam: teamMap[m.HomeTeamID],
-			AwayTeam: teamMap[m.AwayTeamID],
+			ID:         m.ID,
+			Matchday:   m.Matchday,
+			Date:       m.Date.Format(time.RFC3339),
+			Time:       m.Date.Format("15:04"),
+			HomeTeam:   teamMap[m.HomeTeamID],
+			AwayTeam:   teamMap[m.AwayTeamID],
+			HomeTeamID: m.HomeTeamID,
+			AwayTeamID: m.AwayTeamID,
 		})
 	}
 	return upcoming, nil
-}
-
-// AddCoach adds a coach to a team, ensuring no coach currently exists
-func (s *FootballService) AddCoach(teamID, name string) error {
-	team, err := s.teamRepo.GetTeamByID(teamID)
-	if err != nil {
-		return err
-	}
-	if team.Coach != "" {
-		return fmt.Errorf("team already has a coach: %s. Use replace to change.", team.Coach)
-	}
-	return s.teamRepo.UpdateTeamCoach(teamID, name)
-}
-
-// RemoveCoach removes the coach from a team
-func (s *FootballService) RemoveCoach(teamID string) error {
-	return s.teamRepo.UpdateTeamCoach(teamID, "")
-}
-
-// ReplaceCoach updates the coach of a team (conceptually same as Update, but semantically distinct for API)
-func (s *FootballService) ReplaceCoach(teamID, name string) error {
-	return s.teamRepo.UpdateTeamCoach(teamID, name)
 }
